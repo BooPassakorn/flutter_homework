@@ -1,85 +1,144 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ui_homework/core/di/auth_controller.dart';
+import 'package:flutter_ui_homework/core/theme/theme.dart';
+import 'package:get/get.dart';
 
 class LoginPage extends StatelessWidget {
+  LoginPage({Key? key}) : super(key: key);
+
+  final _authController = Get.find<AuthController>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 32.0),
-        child: Center(
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 30.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                "Qiyorie",
-                style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.orange,
-                ),
-              ),
-              SizedBox(height: 20),
-              Text(
-                "Login to your Account",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.grey),
-              ),
-              SizedBox(height: 20),
-              TextField(
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: "Email",
-                ),
-              ),
-              SizedBox(height: 10),
-              TextField(
-                obscureText: true,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: "Password",
-                ),
-              ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
-                  padding: EdgeInsets.symmetric(vertical: 12, horizontal: 100),
-                ),
-                onPressed: () {},
-                child: Text(
-                  "Sign in",
-                  style: TextStyle(fontSize: 18, color: Colors.white),
-                ),
-              ),
-              SizedBox(height: 20),
-              Text("- Or sign in with -", style: TextStyle(color: Colors.grey)),
-              SizedBox(height: 10),
-              SingleChildScrollView(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    _socialButton("assets/google.png"),
-                    SizedBox(width: 10),
-                    _socialButton("assets/facebook.png"),
-                    SizedBox(width: 10),
-                    _socialButton("assets/x.png"),
-                  ],
-                ),
-              ),
-              SizedBox(height: 20),
-              Row(
+              Spacer(), // ดันเนื้อหาหลักให้อยู่ตรงกลางของหน้าจอ
+              Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Don't have an account?"),
-                  TextButton(
-                    onPressed: () {},
-                    child: Text("Sign up", style: TextStyle(color: Colors.blue)),
+                  Text(
+                    "Qiyorie",
+                    style: TextStyle(
+                      fontSize: 40,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.orange,
+                    ),
+                  ),
+                  SizedBox(height: 100),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "Login to your Account",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 20),
+                  TextField(
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius:
+                            BorderRadius.circular(12),
+                      ),
+                      hintText: "Email",
+                      hintStyle: TextStyle(
+                        fontWeight: FontWeight.w200,
+                        color: Colors.grey,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  TextField(
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius:
+                            BorderRadius.circular(12),
+                      ),
+                      hintText: "Password",
+                      hintStyle: TextStyle(
+                        fontWeight: FontWeight.w200,
+                        color: Colors.grey,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  _loginButton(),
+                  SizedBox(height: 80),
+                  Text("- Or sign in with -",
+                      style: TextStyle(color: Colors.grey)),
+                  SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      _socialButton("assets/google.png"),
+                      SizedBox(width: 10),
+                      _socialButton("assets/facebook.png"),
+                      SizedBox(width: 10),
+                      _socialButton("assets/x.png"),
+                    ],
                   ),
                 ],
               ),
+              Spacer(), // ดัน "Don't have an account? Sign up" ไปด้านล่าง
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Don't have an account?",
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                  TextButton(
+                    onPressed: () {},
+                    child:
+                        Text("Sign up", style: TextStyle(color: Colors.blue)),
+                  ),
+                ],
+              ),
+              SizedBox(height: 20),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _loginButton() {
+    return SizedBox(
+      width: double.infinity,
+      height: 50,
+      child: ElevatedButton(
+          onPressed: () {
+            _authController.bypassLogin();
+          },
+          style: ButtonStyle(
+            backgroundColor:
+                MaterialStateProperty.all<Color>(Colors.blueAccent),
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8.0),
+                side: const BorderSide(color: Colors.blueAccent),
+              ),
+            ),
+          ),
+          child: TitleText(
+            text: "Sign in",
+            fontWeight: FontWeight.w400,
+            color: Colors.white,
+          )),
     );
   }
 
@@ -92,7 +151,7 @@ class LoginPage extends StatelessWidget {
       ),
       child: Image.asset(
         assetPath,
-        width: 30,
+        width: 80,
         height: 30,
       ),
     );

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ui_homework/core/di/di.dart';
 import 'package:flutter_ui_homework/src/pages/login_page.dart';
 
-void main() {
+void main() async {
+
+  await initGetX();
   runApp(const MyApp());
 }
 
