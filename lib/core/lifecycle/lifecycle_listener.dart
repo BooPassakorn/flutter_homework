@@ -31,7 +31,7 @@ class LifecycleListener<T extends LifecycleListenerEvent>
   }
 }
 
-abstract class LifecycleListenerEvent {
+mixin class LifecycleListenerEvent {
   void onResume(){
 
   }

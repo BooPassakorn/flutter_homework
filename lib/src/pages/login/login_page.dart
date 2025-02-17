@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ui_homework/core/config/routes.dart';
 import 'package:flutter_ui_homework/core/di/auth_controller.dart';
 import 'package:flutter_ui_homework/core/theme/theme.dart';
 import 'package:flutter_ui_homework/core/widget/extentions.dart';
@@ -138,10 +139,7 @@ class LoginPage extends StatelessWidget {
       width: 300,
       height: 50,
       child: ElevatedButton(
-        onPressed: () {
-          _authController.bypassLogin();
-          // Get.toNamed(Routes.mainPage);
-        },
+        onPressed: () {},
         style: ButtonStyle(
           backgroundColor:
           WidgetStateProperty.all<Color>(Colors.blueAccent),
@@ -158,7 +156,9 @@ class LoginPage extends StatelessWidget {
           color: Colors.white,
         ),
       ),
-    ).ripple(() {}, borderRadius: const BorderRadius.all(Radius.circular(13)));
+    ).ripple(() {
+      _authController.bypassLogin();
+    }, borderRadius: const BorderRadius.all(Radius.circular(13)));
   }
 
   Widget _socialButton(String assetPath) {

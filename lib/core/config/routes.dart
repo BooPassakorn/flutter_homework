@@ -7,6 +7,12 @@ class Routes {
   static const rootPage = "/";
   static const mainPage = "/main";
 
+  static Map<String, WidgetBuilder> getRoute(){
+    return <String, WidgetBuilder>{
+      rootPage : (_) => MyHomePage(),
+    };
+  }
+
   static List<GetPage> getPageRoute() {
     return [
       GetPage(
