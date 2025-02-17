@@ -91,7 +91,7 @@ class MyHomePage extends StatelessWidget with LifecycleListenerEvent {
               ],
             ),
           ),
-          Expanded(child: Center(child: Text('Main Content Here'))),
+          Expanded(child: Center(child: Text('Main Content Coming Soon'))),
         ],
       ),
     );
