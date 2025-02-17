@@ -45,17 +45,75 @@ class MyHomePage extends StatelessWidget with LifecycleListenerEvent {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            const Text("Test")
-          ],
-        ),
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        title: Text('Qiyorie', style: TextStyle(color: Colors.blueAccent, fontSize: 24, fontWeight: FontWeight.bold)),
+        actions: [
+          Stack(
+            children: [
+              IconButton(
+                icon: Icon(Icons.notifications_outlined, color: Colors.black, size: 30,),
+                onPressed: () {},
+              ),
+              Positioned(
+                right: 20,
+                top: 8,
+                child: Container(
+                  padding: EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    color: Colors.red,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Text(
+                    '61',
+                    style: TextStyle(color: Colors.white, fontSize: 9, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+        backgroundColor: Colors.white,
+        elevation: 0,
+      ),
+      body: Column(
+        children: [
+          Container(
+            height: 100,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: [
+                _buildStoryItem('Your Story', 'assets/story1.jpg'),
+                _buildStoryItem('pattanap...', 'assets/story2.jpg'),
+                _buildStoryItem('bufrghm...', 'assets/story3.jpg'),
+                _buildStoryItem('13161.jpg', 'assets/story4.jpg'),
+                _buildStoryItem('uwuwu', 'assets/story5.jpg'),
+              ],
+            ),
+          ),
+          Expanded(child: Center(child: Text('Main Content Here'))),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStoryItem(String name, String imagePath) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      child: Column(
+        children: [
+          CircleAvatar(
+            radius: 35,
+            backgroundImage: AssetImage(imagePath),
+          ),
+          SizedBox(height: 4),
+          Text(name, style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
+        ],
       ),
     );
   }
 }
+
 
 
 
