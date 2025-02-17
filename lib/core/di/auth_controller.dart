@@ -5,9 +5,8 @@ import 'package:get/get.dart';
 class AuthController extends GetxController {
 
   void bypassLogin() {
-    Get.offAllNamed(
-        Routes.mainPage); //ไม่เอาตัวเองลง stack และล้าง stack ออกด้วย
-
-    // Get.toNamed(Routes.mainPage);
+    print("BypassLogin function is called!!!!!!!!!!!!");
+    Get.offAllNamed(Routes.mainPage);
   }
+
 }
