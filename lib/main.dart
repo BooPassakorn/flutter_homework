@@ -4,6 +4,7 @@ import 'package:flutter_ui_homework/core/di/auth_controller.dart';
 import 'package:flutter_ui_homework/core/di/di.dart';
 import 'package:flutter_ui_homework/core/lifecycle/lifecycle_listener.dart';
 import 'package:flutter_ui_homework/core/widget/custom_confirm_dialog.dart';
+import 'package:flutter_ui_homework/core/widget/navigation_bar.dart';
 import 'package:flutter_ui_homework/src/pages/main/main_content.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
@@ -11,7 +12,10 @@ import 'package:lottie/lottie.dart';
 void main() async {
   await initGetX();
   Get.put(AuthController());
-  runApp(const MyApp());
+  runApp(GetMaterialApp(
+    getPages: Routes.getPageRoute(),
+    initialRoute: Routes.rootPage, // เริ่มที่หน้า Login
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -21,10 +25,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
       getPages: Routes.getPageRoute(),
       initialRoute: Routes.rootPage,
     );

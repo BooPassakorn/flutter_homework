@@ -13,6 +13,7 @@ class MainContent extends StatelessWidget {
               thickness: 1,
               height: 70,
             ),
+            Text("MainContent Is Coming Soon"),
           ],
         ),
       ),
