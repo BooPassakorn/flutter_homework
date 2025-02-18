@@ -3,6 +3,7 @@ import 'package:flutter_ui_homework/core/config/routes.dart';
 import 'package:flutter_ui_homework/core/di/auth_controller.dart';
 import 'package:flutter_ui_homework/core/di/di.dart';
 import 'package:flutter_ui_homework/core/lifecycle/lifecycle_listener.dart';
+import 'package:flutter_ui_homework/src/pages/main/main_content.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 
@@ -48,11 +49,18 @@ class MyHomePage extends StatelessWidget with LifecycleListenerEvent {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text('Qiyorie',
-            style: TextStyle(
-                color: Colors.blueAccent,
-                fontSize: 24,
-                fontWeight: FontWeight.bold)),
+        title: ShaderMask(
+          shaderCallback: (bounds) => LinearGradient(
+            colors: [Color(0xFF14BDD9), Color(0xFF7FE4EE), Color(0xFF7281C1), Color(0xFF6A73C0)],
+            begin: Alignment.topLeft,
+            end: Alignment.topRight,
+          ).createShader(bounds),
+          child: Text('Qiyorie',
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold)),
+        ),
         actions: [
           Stack(
             children: [
@@ -104,7 +112,7 @@ class MyHomePage extends StatelessWidget with LifecycleListenerEvent {
               ],
             ),
           ),
-          Expanded(child: Center(child: Text('Main Content Coming Soon'))),
+          Expanded(child: MainContent()),
         ],
       ),
     );

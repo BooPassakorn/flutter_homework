@@ -5,6 +5,17 @@ class MainContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Container(
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            const Divider(
+              thickness: 1,
+              height: 70,
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
