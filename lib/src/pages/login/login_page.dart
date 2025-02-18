@@ -142,11 +142,11 @@ class LoginPage extends StatelessWidget {
         onPressed: () {},
         style: ButtonStyle(
           backgroundColor:
-          WidgetStateProperty.all<Color>(Colors.blueAccent),
+          WidgetStateProperty.all<Color>(Color(0xFF233097)),
           shape: WidgetStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8.0),
-              side: const BorderSide(color: Colors.blueAccent),
+              side: const BorderSide(color: Color(0xFF233097)),
             ),
           ),
         ),
