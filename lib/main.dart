@@ -48,12 +48,20 @@ class MyHomePage extends StatelessWidget with LifecycleListenerEvent {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text('Qiyorie', style: TextStyle(color: Colors.blueAccent, fontSize: 24, fontWeight: FontWeight.bold)),
+        title: Text('Qiyorie',
+            style: TextStyle(
+                color: Colors.blueAccent,
+                fontSize: 24,
+                fontWeight: FontWeight.bold)),
         actions: [
           Stack(
             children: [
               IconButton(
-                icon: Icon(Icons.notifications_outlined, color: Colors.black, size: 30,),
+                icon: Icon(
+                  Icons.notifications_outlined,
+                  color: Colors.black,
+                  size: 30,
+                ),
                 onPressed: () {},
               ),
               Positioned(
@@ -67,7 +75,10 @@ class MyHomePage extends StatelessWidget with LifecycleListenerEvent {
                   ),
                   child: Text(
                     '61',
-                    style: TextStyle(color: Colors.white, fontSize: 9, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 9,
+                        fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
@@ -89,6 +100,7 @@ class MyHomePage extends StatelessWidget with LifecycleListenerEvent {
                 StoryItem(name: 'bufrghm...', imagePath: 'assets/story3.jpg'),
                 StoryItem(name: '13161.jpg', imagePath: 'assets/story4.jpg'),
                 StoryItem(name: 'uwuwu', imagePath: 'assets/story5.jpg'),
+                StoryItem(name: 'MainJett', imagePath: 'assets/story6.jpg'),
               ],
             ),
           ),
@@ -117,10 +129,12 @@ class _StoryItemState extends State<StoryItem> with TickerProviderStateMixin { /
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(vsync: this, duration: Duration(milliseconds: 6000)); //กำหนดเวลาของ lottie เวลาแสดง
+    _controller = AnimationController(
+        vsync: this,
+        duration: Duration(milliseconds: 6000)); //กำหนดเวลาของ lottie เวลาแสดง
 
     WidgetsBinding.instance.addPostFrameCallback((_) { //โค้ดที่อยู่ในคลาสจะถูกเรียกหลังจากโหลดหน้าแรกเสร็จ
-      _controller.forward().then((_) { //forward คือการให้อนิเมชันเล่น และหยุดด้วย then
+      _controller.forward(from: 1).then((_) { //forward คือการให้อนิเมชันเล่น และหยุดด้วย then
         setState(() {
           hasPlay = true; //เล่นเสร็จ
         });
@@ -129,14 +143,15 @@ class _StoryItemState extends State<StoryItem> with TickerProviderStateMixin { /
   }
 
   void _playAnimation() {
-    if (!playOnTap && hasPlay) { //ป้องกันการกดรัวๆแล้วเล่น และcheckว่าต้องเล่นจบแล้ว
+    if (!playOnTap && hasPlay) {//ป้องกันการกดรัวๆแล้วเล่น และcheckว่าต้องเล่นจบแล้ว
       setState(() {
         playOnTap = true;
       });
 
       _controller.forward(from: 0).then((_) { //กดแล้วต้องเล่นอนิเมชันตั้งแต่เริ่มต้นของ lottie
         setState(() {
-          playOnTap = false; //false เพื่อ เมื่ออนิเมชันเล่นเสร็จ จะสามารถเล่นต่อได้
+          playOnTap =
+              false; //false เพื่อ เมื่ออนิเมชันเล่นเสร็จ จะสามารถเล่นต่อได้
         });
       });
     }
@@ -159,11 +174,12 @@ class _StoryItemState extends State<StoryItem> with TickerProviderStateMixin { /
                   child: Lottie.asset(
                     'assets/loading_story_IG.json',
                     controller: _controller,
-                    animate: false, //ไม่เล่นออโต้
-                    repeat: false, //ไม่วนลูป
+                    animate: false,//ไม่เล่นออโต้
+                    repeat: false,//ไม่วนลูป
                     onLoaded: (composition) { //ถ้าอนิเมชันเล่นเสร็จ จำทำงาน
                       setState(() {
-                        _controller.duration = composition.duration; //ถ้าเล่นเสร็จ จะตั้งเวลาการเล่นของ lottie ตาม JSON
+                        _controller.duration = composition
+                            .duration; //ถ้าเล่นเสร็จ จะตั้งเวลาการเล่นของ lottie ตาม JSON
                       });
                     },
                   ),
@@ -191,4 +207,3 @@ class _StoryItemState extends State<StoryItem> with TickerProviderStateMixin { /
     super.dispose();
   }
 }
-
