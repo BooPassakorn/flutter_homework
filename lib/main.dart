@@ -3,6 +3,7 @@ import 'package:flutter_ui_homework/core/config/routes.dart';
 import 'package:flutter_ui_homework/core/di/auth_controller.dart';
 import 'package:flutter_ui_homework/core/di/di.dart';
 import 'package:flutter_ui_homework/core/lifecycle/lifecycle_listener.dart';
+import 'package:flutter_ui_homework/core/widget/custom_confirm_dialog.dart';
 import 'package:flutter_ui_homework/src/pages/main/main_content.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
@@ -46,74 +47,103 @@ class MyHomePage extends StatelessWidget with LifecycleListenerEvent {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: ShaderMask(
-          shaderCallback: (bounds) => LinearGradient(
-            colors: [Color(0xFF14BDD9), Color(0xFF7FE4EE), Color(0xFF7281C1), Color(0xFF6A73C0)],
-            begin: Alignment.topLeft,
-            end: Alignment.topRight,
-          ).createShader(bounds),
-          child: Text('Qiyorie',
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold)),
-        ),
-        actions: [
-          Stack(
-            children: [
-              IconButton(
-                icon: Icon(
-                  Icons.notifications_outlined,
-                  color: Colors.black,
-                  size: 30,
-                ),
-                onPressed: () {},
-              ),
-              Positioned(
-                right: 20,
-                top: 8,
-                child: Container(
-                  padding: EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    color: Colors.red,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Text(
-                    '61',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 9,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
+    return WillPopScope(
+      onWillPop: () async {
+        await showDialog(
+            context: context,
+            builder: (ctx) {
+              return CustomConfirmDialog(
+                title: "Confirm to close the application??",
+                description: "",
+                positiveText: "Confirm",
+                negativeText: "Cancel",
+                positiveColor: Colors.blueAccent,
+                assetImage: "assets/logout.svg",
+                positiveHandler: () async {
+                  Get.find<AuthController>().endSession();
+
+                  //  Get.offAllNamed(Routes.rootPage); //ออกมาหน้าแรก
+
+                  //_exitApp();
+                },
+
+                negativeHandler: () async {
+
+                },
+              );
+            });
+
+        return Future.value(false);
+      },
+      child: Scaffold(
         backgroundColor: Colors.white,
-        elevation: 0,
-      ),
-      body: Column(
-        children: [
-          Container(
-            height: 100,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
+        appBar: AppBar(
+          title: ShaderMask(
+            shaderCallback: (bounds) => LinearGradient(
+              colors: [Color(0xFF14BDD9), Color(0xFF7FE4EE), Color(0xFF7281C1), Color(0xFF6A73C0)],
+              begin: Alignment.topLeft,
+              end: Alignment.topRight,
+            ).createShader(bounds),
+            child: Text('Qiyorie',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold)),
+          ),
+          actions: [
+            Stack(
               children: [
-                StoryItem(name: 'Your Story', imagePath: 'assets/story1.jpg'),
-                StoryItem(name: 'pattanap...', imagePath: 'assets/story2.jpg'),
-                StoryItem(name: 'bufrghm...', imagePath: 'assets/story3.jpg'),
-                StoryItem(name: '13161.jpg', imagePath: 'assets/story4.jpg'),
-                StoryItem(name: 'uwuwu', imagePath: 'assets/story5.jpg'),
-                StoryItem(name: 'MainJett', imagePath: 'assets/story6.jpg'),
+                IconButton(
+                  icon: Icon(
+                    Icons.notifications_outlined,
+                    color: Colors.black,
+                    size: 30,
+                  ),
+                  onPressed: () {},
+                ),
+                Positioned(
+                  right: 20,
+                  top: 8,
+                  child: Container(
+                    padding: EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Text(
+                      '61',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 9,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
               ],
             ),
-          ),
-          Expanded(child: MainContent()),
-        ],
+          ],
+          backgroundColor: Colors.white,
+          elevation: 0,
+        ),
+        body: Column(
+          children: [
+            Container(
+              height: 100,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                children: [
+                  StoryItem(name: 'Your Story', imagePath: 'assets/story1.jpg'),
+                  StoryItem(name: 'pattanap...', imagePath: 'assets/story2.jpg'),
+                  StoryItem(name: 'bufrghm...', imagePath: 'assets/story3.jpg'),
+                  StoryItem(name: '13161.jpg', imagePath: 'assets/story4.jpg'),
+                  StoryItem(name: 'uwuwu', imagePath: 'assets/story5.jpg'),
+                  StoryItem(name: 'MainJett', imagePath: 'assets/story6.jpg'),
+                ],
+              ),
+            ),
+            Expanded(child: MainContent()),
+          ],
+        ),
       ),
     );
   }
