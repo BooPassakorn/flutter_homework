@@ -125,13 +125,12 @@ class _StoryItemState extends State<StoryItem> with TickerProviderStateMixin { /
   late AnimationController _controller; //ตัวคุมอนิเมชัน
   bool playOnTap = false; //ป้องกันกดรัวๆ แล้วเล่นซ้ำ
   bool hasPlay = false; //ตรวจว่ามีการเล่นไปรึยัง
+  String lottieAsset = 'assets/loading_story_IG.json';
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-        vsync: this,
-        duration: Duration(milliseconds: 6000)); //กำหนดเวลาของ lottie เวลาแสดง
+    _controller = AnimationController( vsync: this, duration: Duration(milliseconds: 6000)); //กำหนดเวลาของ lottie เวลาแสดง
 
     WidgetsBinding.instance.addPostFrameCallback((_) { //โค้ดที่อยู่ในคลาสจะถูกเรียกหลังจากโหลดหน้าแรกเสร็จ
       _controller.forward(from: 1).then((_) { //forward คือการให้อนิเมชันเล่น และหยุดด้วย then
@@ -143,15 +142,23 @@ class _StoryItemState extends State<StoryItem> with TickerProviderStateMixin { /
   }
 
   void _playAnimation() {
-    if (!playOnTap && hasPlay) {//ป้องกันการกดรัวๆแล้วเล่น และcheckว่าต้องเล่นจบแล้ว
+    if (!playOnTap && hasPlay) { //ป้องกันการกดรัวๆแล้วเล่น และcheckว่าต้องเล่นจบแล้ว
       setState(() {
         playOnTap = true;
       });
 
+      //เล่น Lottie ตัวเดิม
       _controller.forward(from: 0).then((_) { //กดแล้วต้องเล่นอนิเมชันตั้งแต่เริ่มต้นของ lottie
-        setState(() {
-          playOnTap =
-              false; //false เพื่อ เมื่ออนิเมชันเล่นเสร็จ จะสามารถเล่นต่อได้
+        setState(() { //เมื่อเล่นเสร็จแล้วจะทำให้เปลี่ยนไปใช้ lottie ตัวใหม่
+          lottieAsset = 'assets/loading_story_IG_black.json';
+        });
+
+        //เล่น lottie ตัวใหม่
+        _controller.reset();
+        _controller.forward(from: 1).then((_) {
+          setState(() {
+            playOnTap = false; //false เพื่อ เมื่ออนิเมชันเล่นเสร็จ จะสามารถเล่นต่อได้
+          });
         });
       });
     }
@@ -172,14 +179,13 @@ class _StoryItemState extends State<StoryItem> with TickerProviderStateMixin { /
                   width: 80,
                   height: 80,
                   child: Lottie.asset(
-                    'assets/loading_story_IG.json',
+                    lottieAsset,
                     controller: _controller,
                     animate: false,//ไม่เล่นออโต้
                     repeat: false,//ไม่วนลูป
-                    onLoaded: (composition) { //ถ้าอนิเมชันเล่นเสร็จ จำทำงาน
+                    onLoaded: (composition) { //ถ้าอนิเมชันเล่นเสร็จ จะทำงาน
                       setState(() {
-                        _controller.duration = composition
-                            .duration; //ถ้าเล่นเสร็จ จะตั้งเวลาการเล่นของ lottie ตาม JSON
+                        _controller.duration = composition .duration; //ถ้าเล่นเสร็จ จะตั้งเวลาการเล่นของ lottie ตาม JSON
                       });
                     },
                   ),
