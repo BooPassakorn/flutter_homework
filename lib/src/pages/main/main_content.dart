@@ -34,7 +34,7 @@ class PostMain extends StatelessWidget {
             ),
             _profile(),
             _imagePost(),
-
+            _detailPost(),
           ],
         ),
       ),
@@ -99,6 +99,14 @@ class PostMain extends StatelessWidget {
         borderRadius: BorderRadius.circular(15),
         child: Image.asset(post.imagePost),
       ),
+    );
+  }
+
+  Widget _detailPost () {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      child: Text(post.detailPost,
+      style: TextStyle(fontSize: 15),)
     );
   }
 
