@@ -4,8 +4,6 @@ import 'package:flutter_ui_homework/core/di/auth_controller.dart';
 import 'package:flutter_ui_homework/core/di/di.dart';
 import 'package:flutter_ui_homework/core/lifecycle/lifecycle_listener.dart';
 import 'package:flutter_ui_homework/core/widget/custom_confirm_dialog.dart';
-import 'package:flutter_ui_homework/core/widget/navigation_bar.dart';
-import 'package:flutter_ui_homework/src/model/post_in_main.dart';
 import 'package:flutter_ui_homework/src/pages/main/main_content.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
