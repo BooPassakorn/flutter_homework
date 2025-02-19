@@ -13,7 +13,7 @@ void main() async {
   Get.put(AuthController());
   runApp(GetMaterialApp(
     getPages: Routes.getPageRoute(),
-    initialRoute: Routes.rootPage, // เริ่มที่หน้า Login
+    initialRoute: Routes.rootPage, //เริ่มที่หน้า Login
   ));
 }
 

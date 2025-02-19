@@ -8,7 +8,7 @@ class Appdata {
         nickname: "@violadwip",
         imageProfile: "assets/story1.jpg",
         imagePost: "assets/post1.jpg",
-        detailPost: "VALORANT Masters Bangkok 2025 กำลังจะเปิดฉากที่กรุงเทพฯ โดยมี 8 ทีมสุดแกร่งจากทั่วโลกลงประชันฝีมือ เพื่อคว้าแชมป์รายการ Masters แรกของปี 2025!",
+        detailPost: "VALORANT Masters Bangkok 2025 กำลังจะเปิดฉากที่กรุงเทพฯ โดยมี 8 ทีมสุดแกร่งจากทั่วโลกลงประชันฝีมือ เพื่อคว้าแชมป์รายการ Masters แรกของปี 2025! #VLR #VCT",
         isLiked: true,
         isBookmark: true,
         isVerified: false),

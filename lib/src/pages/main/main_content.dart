@@ -117,13 +117,39 @@ class _PostMainState extends State<PostMain> {
     );
   }
 
+  Widget _getColoredHashtagText(String text) {
+    if (text.contains('#')) {
+      var preHashtag = text.substring(0, text.indexOf('#'));
+      var postHashtag = text.substring(text.indexOf('#'));
+      var hashTag = postHashtag;
+      var other;
+      if (postHashtag.contains(' ')) {
+        hashTag = postHashtag.substring(0, postHashtag.indexOf(' '));
+        other = postHashtag.substring(postHashtag.indexOf(' '));
+      }
+      return RichText(
+        text: TextSpan(
+          style: DefaultTextStyle.of(context).style,
+          children: <TextSpan>[
+            TextSpan(text: preHashtag),
+            TextSpan(text: hashTag, style: TextStyle(color: Colors.blue)),
+            TextSpan(text: other != null ? other : ""),
+          ],
+        ),
+      );
+    } else {
+      return Text(text);
+    }
+  }
+
   Widget _detailPost() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-      child: Text(
-        widget.post.detailPost,
-        style: TextStyle(fontSize: 15),
-      ),
+      child: _getColoredHashtagText(widget.post.detailPost),
+      // child: Text(
+      //   widget.post.detailPost,
+      //   style: TextStyle(fontSize: 15),
+      // ),
     );
   }
 
