@@ -6,7 +6,7 @@ class PostInMain {
   String imagePost;
   String detailPost;
   bool isLiked;
-  bool isRecord;
+  bool isBookmark;
   bool isVerified;
 
   PostInMain(
@@ -17,6 +17,6 @@ class PostInMain {
       required this.imagePost,
       required this.detailPost,
       required this.isLiked,
-      required this.isRecord,
+      required this.isBookmark,
       required this.isVerified});
 }

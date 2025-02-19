@@ -10,7 +10,7 @@ class Appdata {
         imagePost: "assets/post1.jpg",
         detailPost: "VALORANT Masters Bangkok 2025 กำลังจะเปิดฉากที่กรุงเทพฯ โดยมี 8 ทีมสุดแกร่งจากทั่วโลกลงประชันฝีมือ เพื่อคว้าแชมป์รายการ Masters แรกของปี 2025!",
         isLiked: true,
-        isRecord: false,
+        isBookmark: true,
         isVerified: false),
     PostInMain(
         id: 2,
@@ -20,7 +20,7 @@ class Appdata {
         imagePost: "assets/post2.jpg",
         detailPost: "In 2024, aespa embarked on their 2024 to 2025 ‘SYNK: Parallel Line’ world tour across Asia and Australia. After wrapping up their Asia leg this weekend in Bangkok, Thailand, they have announced new dates in North America and Europe for early 2025.",
         isLiked: true,
-        isRecord: false,
+        isBookmark: false,
         isVerified: true),
     PostInMain(
         id: 3,
@@ -30,7 +30,7 @@ class Appdata {
         imagePost: "assets/post3.jpg",
         detailPost: 'NJZ (Korean: 엔제이지; Japanese: エンジェイジ), formerly NewJeans (뉴진스), is a five-member girl group formed by ADOR. They debuted on July 22, 2022, with the lead single "Attention", prior to the release of their debut EP New Jeans on August 1, 2022.',
         isLiked: false,
-        isRecord: false,
+        isBookmark: false,
         isVerified: true),
   ];
 }
