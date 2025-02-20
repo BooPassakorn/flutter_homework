@@ -15,7 +15,7 @@ class AuthController extends GetxController {
       Get.offAllNamed(Routes.rootPage);
     } catch (_) {
       if (kDebugMode) {
-        print(_);
+        // print(_);
       }
     }
   }
