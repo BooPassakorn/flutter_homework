@@ -24,7 +24,7 @@ class NavigationBarPage extends StatelessWidget {
 
             destinations: [
               _navigationIcon(Icons.home_outlined, 0, controller),
-              _navigationIcon(Icons.workspaces_outline, 1, controller),
+              _navigationIcon(Icons.category_outlined, 1, controller),
               _navigationIcon(Icons.add_circle_outline, 2, controller),
               _navigationIcon(Icons.move_to_inbox_outlined, 3, controller),
               _navigationIcon(Icons.account_circle_outlined, 4, controller),

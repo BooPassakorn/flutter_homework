@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ui_homework/core/widget/info_post.dart';
 import 'package:flutter_ui_homework/src/model/data.dart';
 import 'package:flutter_ui_homework/src/model/post_in_main.dart';
 
@@ -107,7 +108,10 @@ class _PostMainState extends State<PostMain> {
                   ],
                 ),
                 Spacer(),
-                Icon(Icons.more_horiz),
+                IconButton(
+                    onPressed: (_showOption),
+                    icon: Icon(Icons.more_horiz),
+                )
               ],
             ),
           ],
@@ -116,6 +120,9 @@ class _PostMainState extends State<PostMain> {
     );
   }
 
+  void _showOption() {
+    showModalBottomSheet(context: context, builder: (ctx) => InfoPost());
+  }
 
   Widget _imagePost() {
     return Padding(
