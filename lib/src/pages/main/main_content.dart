@@ -79,19 +79,29 @@ class _PostMainState extends State<PostMain> {
                   ],
                 ),
                 SizedBox(width: 16),
-                Row(
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      widget.post.name,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
+                    Row(
+                      children: [
+                        Text(
+                          widget.post.name,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                        SizedBox(width: 5),
+                        Text(
+                          widget.post.nickname,
+                          style: TextStyle(fontSize: 16, color: Colors.grey),
+                        ),
+                      ],
                     ),
-                    SizedBox(width: 5),
+                    SizedBox(height: 4),
                     Text(
-                      widget.post.nickname,
+                      DateTime.now().difference(widget.post.datePost).inDays.toString() + " days ago",
+                      // widget.post.datePost.difference(DateTime.now()).inDays.toString() + " days ago",
                       style: TextStyle(fontSize: 16, color: Colors.grey),
                     ),
                   ],
@@ -105,6 +115,7 @@ class _PostMainState extends State<PostMain> {
       ),
     );
   }
+
 
   Widget _imagePost() {
     return Padding(

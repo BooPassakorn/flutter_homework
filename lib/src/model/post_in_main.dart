@@ -8,6 +8,7 @@ class PostInMain {
   bool isLiked;
   bool isBookmark;
   bool isVerified;
+  DateTime datePost;
 
   PostInMain(
       {required this.id,
@@ -18,5 +19,6 @@ class PostInMain {
       required this.detailPost,
       required this.isLiked,
       required this.isBookmark,
-      required this.isVerified});
+      required this.isVerified,
+      required this.datePost});
 }
