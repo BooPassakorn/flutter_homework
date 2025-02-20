@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ui_homework/src/model/data.dart';
 import 'package:flutter_ui_homework/src/model/post_in_main.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class MainContent extends StatelessWidget {
   MainContent({Key? key}) : super(key: key);
@@ -44,10 +43,7 @@ class _PostMainState extends State<PostMain> {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            const Divider(
-              thickness: 1,
-              height: 70,
-            ),
+            const Divider(thickness: 1, height: 70),
             _profile(),
             _imagePost(),
             _detailPost(),
@@ -88,7 +84,10 @@ class _PostMainState extends State<PostMain> {
                   children: [
                     Text(
                       widget.post.name,
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
                     ),
                     SizedBox(width: 5),
                     Text(
@@ -159,33 +158,44 @@ class _PostMainState extends State<PostMain> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          _iconButton(FontAwesomeIcons.comment, Colors.grey, "21", () {}),
-          _iconButton(Icons.favorite, isLiked ? Colors.red : Colors.grey, "99", () {
-            setState(() {
-              isLiked = !isLiked;
-            });
-          }),
-          _iconButton(FontAwesomeIcons.solidBookmark, isBookmark ? Color(0xff07699d) : Colors.grey, "12", () {
-            setState(() {
-              isBookmark = !isBookmark;
-            });
-          }),
+          _iconButton(Icons.mode_comment_outlined, Colors.grey, "21", () {}),
+          _iconButton(
+            isLiked ? Icons.favorite : Icons.favorite_outline,
+            isLiked ? Colors.red : Colors.grey,
+            "99",
+            () {
+              setState(() {
+                isLiked = !isLiked;
+              });
+            },
+          ),
+          _iconButton(
+            isBookmark ? Icons.bookmark : Icons.bookmark_border,
+            isBookmark ? Color(0xff07699d) : Colors.grey,
+            "12",
+            () {
+              setState(() {
+                isBookmark = !isBookmark;
+              });
+            },
+          ),
           _iconButton(Icons.file_upload_outlined, Colors.grey, "12", () {}),
         ],
       ),
     );
   }
 
-  Widget _iconButton(IconData icon, Color color, String text, VoidCallback onPressed) {
+  Widget _iconButton(
+    IconData icon,
+    Color color,
+    String text,
+    VoidCallback onPressed,
+  ) {
     return Row(
       children: [
-        IconButton(
-          onPressed: onPressed,
-          icon: Icon(icon, color: color),
-        ),
+        IconButton(onPressed: onPressed, icon: Icon(icon, color: color)),
         Text(text),
       ],
     );
   }
 }
-
