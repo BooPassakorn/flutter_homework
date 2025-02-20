@@ -116,35 +116,39 @@ class _PostMainState extends State<PostMain> {
     );
   }
 
-  Widget _getColoredHashtagText(String text) {
-    if (text.contains('#')) {
-      var preHashtag = text.substring(0, text.indexOf('#'));
-      var postHashtag = text.substring(text.indexOf('#'));
-      var hashTag = postHashtag;
-      var other;
-      if (postHashtag.contains(' ')) {
-        hashTag = postHashtag.substring(0, postHashtag.indexOf(' '));
-        other = postHashtag.substring(postHashtag.indexOf(' '));
+  Widget _makeColorHashtag(String text) {
+    List<TextSpan> spans = [];
+    RegExp regExp = RegExp(r"(#[^\s]+)"); //ตรวจคำที่มี # นำหน้า ความหมาย # ต้องมี # เป็นตัวแรก [^\s]+ หมายถึงตัวอักษรที่ไม่ใช่ช่องว่าง (\s) อย่างน้อย 1 ตัวขึ้นไป
+    Iterable<RegExpMatch> matches = regExp.allMatches(text); //allMatches(text) ค้นหาทุกคำที่ตรงกับ RegExp ที่อยู่ใน text คืนค่ามาเป็น Iterable ที่จะเก็บข้อมูลเกี่ยวกับการจับคู่แต่ละคำ
+
+    int lastIndex = 0; //ไว้เก็บตำแหน่งสุดท้ายข้อความที่่ถูกตรวจแล้ว เอาไปใช้เพื่อตัดข้อความที่ไม่มี # ออก
+    for (RegExpMatch match in matches) {
+      if (match.start > lastIndex) { //match.start ตำแหน่งเริ่มต้นของ # ใน text || lastIndex ตำแหน่งข้อความก่อนหน้า ถ้ามีข้อความอยู่ก่อนหน้า # จะถูกนำมาใส่ spans และสีจะไม่เปลี่ยน
+        spans.add(TextSpan(text: text.substring(lastIndex, match.start)));
       }
-      return RichText(
-        text: TextSpan(
-          style: DefaultTextStyle.of(context).style,
-          children: <TextSpan>[
-            TextSpan(text: preHashtag),
-            TextSpan(text: hashTag, style: TextStyle(color: Colors.blue)),
-            TextSpan(text: other != null ? other : ""),
-          ],
-        ),
-      );
-    } else {
-      return Text(text);
+      spans.add(TextSpan(
+        text: match.group(0), //ดึง # ออกมา
+        style: TextStyle(color: Colors.blue), //กำหนด # ให้เป็นสีฟ้า
+      ));
+      lastIndex = match.end; //กำหนด lastIndex ให้เป็นตำแหน่งที่ # จบลง ใช้ตัดข้อความที่เหลือ
     }
+
+    if (lastIndex < text.length) { //ตรวจสอบว่ามีข้อความที่ยังไม่ได้แสดงหลัง # สุดท้าย ถ้ามี จะถูกเพิ่มใน spans
+      spans.add(TextSpan(text: text.substring(lastIndex)));
+    }
+
+    return RichText(
+      text: TextSpan(
+        style: DefaultTextStyle.of(context).style.copyWith(fontSize: 15),
+        children: spans,
+      ),
+    );
   }
 
   Widget _detailPost() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-      child: _getColoredHashtagText(widget.post.detailPost),
+      child: _makeColorHashtag(widget.post.detailPost),
       // child: Text(
       //   widget.post.detailPost,
       //   style: TextStyle(fontSize: 15),
