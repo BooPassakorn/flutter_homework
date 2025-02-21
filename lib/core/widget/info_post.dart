@@ -20,31 +20,33 @@ class InfoPost extends StatelessWidget {
                 borderRadius: BorderRadius.circular(15),
               ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 20),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Row(
+                Column(
                   children: [
-                    Container(
-                      height: 50,
-                      width: 50,
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.black54),
-                        borderRadius: BorderRadius.circular(100),
-                      ),
-                    ),
-                    Container(
-                      height: 50,
-                      width: 50,
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.black54),
-                        borderRadius: BorderRadius.circular(100),
-                      ),
-                    ),
+                    Icon(Icons.bookmark_border, size: 33),
+                    Text("บันทึก", style: TextStyle(fontSize: 18)),
                   ],
                 ),
-                
+                Column(
+                  children: [
+                    Icon(Icons.qr_code, size: 33),
+                    Text("คิวอาร์โค้ด", style: TextStyle(fontSize: 18)),
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(10),
+                  child: Icon(Icons.near_me_outlined, size: 33),
+                ),
+                Text("แชร์", style: TextStyle(fontSize: 18)),
               ],
             ),
             Row(
@@ -52,9 +54,9 @@ class InfoPost extends StatelessWidget {
               children: [
                 Padding(
                   padding: EdgeInsets.all(10),
-                  child: Icon(Icons.near_me_outlined),
+                  child: Icon(Icons.star_outline, size: 33),
                 ),
-                Text("แชร์")
+                Text("เพิ่มในรายการโปรด", style: TextStyle(fontSize: 18)),
               ],
             ),
             Row(
@@ -62,9 +64,9 @@ class InfoPost extends StatelessWidget {
               children: [
                 Padding(
                   padding: EdgeInsets.all(10),
-                  child: Icon(Icons.star_outline),
+                  child: Icon(Icons.person_remove_outlined, size: 33),
                 ),
-                Text("เพิ่มในรายการโปรด")
+                Text("เลิกติดตาม", style: TextStyle(fontSize: 18)),
               ],
             ),
             Row(
@@ -72,9 +74,9 @@ class InfoPost extends StatelessWidget {
               children: [
                 Padding(
                   padding: EdgeInsets.all(10),
-                  child: Icon(Icons.person_remove_outlined),
+                  child: Icon(Icons.info_outline, size: 33),
                 ),
-                Text("เลิกติดตาม")
+                Text("ทำไมคุณจึงเห็นฌพสต์นี้", style: TextStyle(fontSize: 18)),
               ],
             ),
             Row(
@@ -82,9 +84,9 @@ class InfoPost extends StatelessWidget {
               children: [
                 Padding(
                   padding: EdgeInsets.all(10),
-                  child: Icon(Icons.info_outline),
+                  child: Icon(Icons.visibility_off_outlined, size: 33),
                 ),
-                Text("ทำไมคุณจึงเห็นฌพสต์นี้")
+                Text("ซ่อน", style: TextStyle(fontSize: 18)),
               ],
             ),
             Row(
@@ -92,9 +94,9 @@ class InfoPost extends StatelessWidget {
               children: [
                 Padding(
                   padding: EdgeInsets.all(10),
-                  child: Icon(Icons.visibility_off_outlined),
+                  child: Icon(Icons.account_circle_outlined, size: 33),
                 ),
-                Text("ซ่อน")
+                Text("เกี่ยวกับบัญชีนี้", style: TextStyle(fontSize: 18)),
               ],
             ),
             Row(
@@ -102,20 +104,16 @@ class InfoPost extends StatelessWidget {
               children: [
                 Padding(
                   padding: EdgeInsets.all(10),
-                  child: Icon(Icons.account_circle_outlined),
+                  child: Icon(
+                    Icons.report_gmailerrorred,
+                    color: Colors.red,
+                    size: 33,
+                  ),
                 ),
-                Text("เกี่ยวกับบัญชีนี้")
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: EdgeInsets.all(10),
-                  child: Icon(Icons.report_gmailerrorred, color: Colors.red,),
+                Text(
+                  "รายงาน",
+                  style: TextStyle(color: Colors.red, fontSize: 18),
                 ),
-                Text("รายงาน",
-                style: TextStyle(color: Colors.red),)
               ],
             ),
           ],
