@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ui_homework/main.dart';
+import 'package:flutter_ui_homework/src/pages/profile/profile_page.dart';
 import 'package:get/get.dart';
 
 class NavigationBarPage extends StatelessWidget {
@@ -76,8 +77,6 @@ class NavigationController extends GetxController {
     Container(
       color: Colors.yellow,
     ),
-    Container(
-      color: Colors.green,
-    )
+    ProfilePage(),
   ];
 }
