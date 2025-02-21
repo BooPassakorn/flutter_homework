@@ -101,7 +101,11 @@ class _PostMainState extends State<PostMain> {
                     ),
                     SizedBox(height: 4),
                     Text(
-                      DateTime.now().difference(widget.post.datePost).inDays.toString() + " days ago",
+                      DateTime.now()
+                              .difference(widget.post.datePost)
+                              .inDays
+                              .toString() +
+                          " days ago",
                       // widget.post.datePost.difference(DateTime.now()).inDays.toString() + " days ago",
                       style: TextStyle(fontSize: 16, color: Colors.grey),
                     ),
@@ -109,9 +113,9 @@ class _PostMainState extends State<PostMain> {
                 ),
                 Spacer(),
                 IconButton(
-                    onPressed: (_showOption),
-                    icon: Icon(Icons.more_horiz),
-                )
+                  onPressed: (_showOption),
+                  icon: Icon(Icons.more_horiz),
+                ),
               ],
             ),
           ],
@@ -121,7 +125,16 @@ class _PostMainState extends State<PostMain> {
   }
 
   void _showOption() {
-    showModalBottomSheet(context: context, builder: (ctx) => InfoPost());
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true , //ทำให้เต็มจอ
+      builder:
+          (ctx) => DraggableScrollableSheet(
+            expand: false, //ไม่ใส่ false จะเต็มจอ
+            initialChildSize: 0.67,
+            builder: (_, controller) => InfoPost(scrollController: controller),
+          ),
+    );
   }
 
   Widget _imagePost() {
@@ -136,22 +149,33 @@ class _PostMainState extends State<PostMain> {
 
   Widget _makeColorHashtag(String text) {
     List<TextSpan> spans = [];
-    RegExp regExp = RegExp(r"(#[^\s]+)"); //ตรวจคำที่มี # นำหน้า ความหมาย # ต้องมี # เป็นตัวแรก [^\s]+ หมายถึงตัวอักษรที่ไม่ใช่ช่องว่าง (\s) อย่างน้อย 1 ตัวขึ้นไป
-    Iterable<RegExpMatch> matches = regExp.allMatches(text); //allMatches(text) ค้นหาทุกคำที่ตรงกับ RegExp ที่อยู่ใน text คืนค่ามาเป็น Iterable ที่จะเก็บข้อมูลเกี่ยวกับการจับคู่แต่ละคำ
+    RegExp regExp = RegExp(
+      r"(#[^\s]+)",
+    ); //ตรวจคำที่มี # นำหน้า ความหมาย # ต้องมี # เป็นตัวแรก [^\s]+ หมายถึงตัวอักษรที่ไม่ใช่ช่องว่าง (\s) อย่างน้อย 1 ตัวขึ้นไป
+    Iterable<RegExpMatch> matches = regExp.allMatches(
+      text,
+    ); //allMatches(text) ค้นหาทุกคำที่ตรงกับ RegExp ที่อยู่ใน text คืนค่ามาเป็น Iterable ที่จะเก็บข้อมูลเกี่ยวกับการจับคู่แต่ละคำ
 
-    int lastIndex = 0; //ไว้เก็บตำแหน่งสุดท้ายข้อความที่่ถูกตรวจแล้ว เอาไปใช้เพื่อตัดข้อความที่ไม่มี # ออก
+    int lastIndex =
+        0; //ไว้เก็บตำแหน่งสุดท้ายข้อความที่่ถูกตรวจแล้ว เอาไปใช้เพื่อตัดข้อความที่ไม่มี # ออก
     for (RegExpMatch match in matches) {
-      if (match.start > lastIndex) { //match.start ตำแหน่งเริ่มต้นของ # ใน text || lastIndex ตำแหน่งข้อความก่อนหน้า ถ้ามีข้อความอยู่ก่อนหน้า # จะถูกนำมาใส่ spans และสีจะไม่เปลี่ยน
+      if (match.start > lastIndex) {
+        //match.start ตำแหน่งเริ่มต้นของ # ใน text || lastIndex ตำแหน่งข้อความก่อนหน้า ถ้ามีข้อความอยู่ก่อนหน้า # จะถูกนำมาใส่ spans และสีจะไม่เปลี่ยน
         spans.add(TextSpan(text: text.substring(lastIndex, match.start)));
       }
-      spans.add(TextSpan(
-        text: match.group(0), //ดึง # ออกมา
-        style: TextStyle(color: Colors.blue), //กำหนด # ให้เป็นสีฟ้า
-      ));
-      lastIndex = match.end; //กำหนด lastIndex ให้เป็นตำแหน่งที่ # จบลง ใช้ตัดข้อความที่เหลือ
+      spans.add(
+        TextSpan(
+          text: match.group(0), //ดึง # ออกมา
+          style: TextStyle(color: Colors.blue), //กำหนด # ให้เป็นสีฟ้า
+        ),
+      );
+      lastIndex =
+          match
+              .end; //กำหนด lastIndex ให้เป็นตำแหน่งที่ # จบลง ใช้ตัดข้อความที่เหลือ
     }
 
-    if (lastIndex < text.length) { //ตรวจสอบว่ามีข้อความที่ยังไม่ได้แสดงหลัง # สุดท้าย ถ้ามี จะถูกเพิ่มใน spans
+    if (lastIndex < text.length) {
+      //ตรวจสอบว่ามีข้อความที่ยังไม่ได้แสดงหลัง # สุดท้าย ถ้ามี จะถูกเพิ่มใน spans
       spans.add(TextSpan(text: text.substring(lastIndex)));
     }
 
