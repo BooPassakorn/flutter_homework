@@ -9,8 +9,8 @@ class Appdata {
         imageProfile: "assets/story1.jpg",
         imagePost: "assets/post1.jpg",
         detailPost: "VALORANT Masters Bangkok 2025 กำลังจะเปิดฉากที่กรุงเทพฯ โดยมี 8 ทีมสุดแกร่งจากทั่วโลกลงประชันฝีมือ เพื่อคว้าแชมป์รายการ Masters แรกของปี 2025! #VLR and #VCT",
-        isLiked: true,
-        isBookmark: true,
+        isLiked: false,
+        isBookmark: false,
         isVerified: false,
         datePost: DateTime.utc(2025, 02, 1)
     ),
@@ -21,7 +21,7 @@ class Appdata {
         imageProfile: "assets/profile_logo_aespa.jpg",
         imagePost: "assets/post2.jpg",
         detailPost: "In 2024, #aespa embarked on their 2024 to 2025 ‘SYNK: Parallel Line’ world tour across Asia and Australia. After wrapping up their Asia leg this weekend in Bangkok, Thailand, they have announced new dates in North America and Europe for early 2025.",
-        isLiked: true,
+        isLiked: false,
         isBookmark: false,
         isVerified: true,
         datePost: DateTime.utc(2025, 02, 15)

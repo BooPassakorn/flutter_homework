@@ -31,6 +31,9 @@ class _PostMainState extends State<PostMain> {
   late bool isLiked;
   late bool isBookmark;
 
+  int favoriteCount = 0;
+  int bookmarkCount = 0;
+
   @override
   void initState() {
     super.initState();
@@ -204,28 +207,30 @@ class _PostMainState extends State<PostMain> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          _iconButton(Icons.mode_comment_outlined, Colors.grey, "21", () {}),
+          _iconButton(Icons.mode_comment_outlined, Colors.grey, "0", () {}),
           _iconButton(
             isLiked ? Icons.favorite : Icons.favorite_outline,
             isLiked ? Colors.red : Colors.grey,
-            "99",
-            () {
+            "$favoriteCount",
+                () {
               setState(() {
                 isLiked = !isLiked;
+                favoriteCount += isLiked ? 1 : -1;
               });
             },
           ),
           _iconButton(
             isBookmark ? Icons.bookmark : Icons.bookmark_border,
             isBookmark ? Color(0xff07699d) : Colors.grey,
-            "12",
-            () {
+            "$bookmarkCount",
+                () {
               setState(() {
                 isBookmark = !isBookmark;
+                bookmarkCount += isBookmark ? 1 : -1;
               });
             },
           ),
-          _iconButton(Icons.file_upload_outlined, Colors.grey, "12", () {}),
+          _iconButton(Icons.file_upload_outlined, Colors.grey, "0", () {}),
         ],
       ),
     );
