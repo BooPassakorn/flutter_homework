@@ -27,7 +27,7 @@ class InfoPost extends StatelessWidget {
                 Column(
                   children: [
                     Container(
-                      padding: EdgeInsets.all(10), // ปรับขนาดวงกลม
+                      padding: EdgeInsets.all(10),
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         border: Border.all(color: Colors.black54, width: 2),
@@ -41,7 +41,7 @@ class InfoPost extends StatelessWidget {
                 Column(
                   children: [
                     Container(
-                      padding: EdgeInsets.all(10), // ปรับขนาดวงกลม
+                      padding: EdgeInsets.all(10),
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         border: Border.all(color: Colors.black54, width: 2),
