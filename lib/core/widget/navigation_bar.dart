@@ -12,16 +12,20 @@ class NavigationBarPage extends StatelessWidget {
 
     return Scaffold(
       bottomNavigationBar: Obx(
-        () => NavigationBarTheme( //กำหนดธีม
+        () => NavigationBarTheme(
+          //กำหนดธีม
           data: NavigationBarThemeData(
             indicatorColor: Colors.transparent, //ปิด overlay
           ),
           child: NavigationBar(
             backgroundColor: Colors.white,
-            height: 50, //ความสูงของแถบ
-            elevation: 0, //ไม่มีเงาข้างใต้
+            height: 50,
+            //ความสูงของแถบ
+            elevation: 0,
+            //ไม่มีเงาข้างใต้
             selectedIndex: controller.selectedIndex.value,
-            onDestinationSelected: (index) => controller.selectedIndex.value = index,
+            onDestinationSelected:
+                (index) => controller.selectedIndex.value = index,
 
             destinations: [
               _navigationIcon(Icons.home_outlined, 0, controller),
@@ -37,23 +41,54 @@ class NavigationBarPage extends StatelessWidget {
     );
   }
 
-  NavigationDestination _navigationIcon(IconData icon, int index, NavigationController controller) {
+  NavigationDestination _navigationIcon(
+    IconData icon,
+    int index,
+    NavigationController controller,
+  ) {
     bool isSelected = controller.selectedIndex.value == index;
     return NavigationDestination(
       icon: Padding(
         padding: EdgeInsets.only(top: 10),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
+        child: Stack(
           children: [
-            Icon(icon,
-                size: 30,
-                color: isSelected ? Color(0xff07699d) : Colors.black54),
-            if (isSelected)
-              Container(
-                margin: EdgeInsets.only(top: 2),
-                width: 20,
-                height: 2,
-                color: Color(0xff07699d),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  icon,
+                  size: 30,
+                  color: isSelected ? Color(0xff07699d) : Colors.black54,
+                ),
+                if (isSelected)
+                  Container(
+                    margin: EdgeInsets.only(top: 2),
+                    width: 20,
+                    height: 2,
+                    color: Color(0xff07699d),
+                  ),
+              ],
+            ),
+            if (index == 3)
+              Positioned(
+                top: -4,
+                right: 16,
+                child: Container(
+                  padding: EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    color: Colors.red,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Text(
+                    "4",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    // textAlign: TextAlign.center,
+                  ),
+                ),
               ),
           ],
         ),
@@ -68,15 +103,9 @@ class NavigationController extends GetxController {
 
   final screens = [
     MyHomePage(),
-    Container(
-      color: Colors.blueAccent,
-    ),
-    Container(
-      color: Colors.red,
-    ),
-    Container(
-      color: Colors.yellow,
-    ),
+    Container(color: Colors.blueAccent),
+    Container(color: Colors.red),
+    Container(color: Colors.yellow),
     ProfilePage(),
   ];
 }

@@ -10,7 +10,7 @@ class ProfilePage extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text("data")
+              Text("Coming Soon")
             ],
           )
       ),
