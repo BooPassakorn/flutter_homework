@@ -36,7 +36,7 @@ class Appdata {
         isLiked: false,
         isBookmark: false,
         isVerified: true,
-        datePost: DateTime.utc(2025, 02, 20)
+        datePost: DateTime.utc(2025, 02, 24, 4, 49, 00) //ปี เดือน วัน ชั่วโมง นาที วินาที
     ),
   ];
 }

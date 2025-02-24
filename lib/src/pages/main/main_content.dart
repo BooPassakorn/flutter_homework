@@ -103,14 +103,18 @@ class _PostMainState extends State<PostMain> {
                       ],
                     ),
                     SizedBox(height: 4),
-                    Text(
-                      DateTime.now()
-                              .difference(widget.post.datePost)
-                              .inDays
-                              .toString() +
-                          " days ago",
-                      // widget.post.datePost.difference(DateTime.now()).inDays.toString() + " days ago",
-                      style: TextStyle(fontSize: 16, color: Colors.grey),
+                    Text(() {
+                      Duration diff = DateTime.now().difference(widget.post.datePost);
+                      if (diff.inMinutes < 1) {
+                        return "Just now";
+                      } else if (diff.inMinutes < 60) {
+                        return "${diff.inMinutes} mins ago";
+                      } else if (diff.inHours < 24) {
+                        return "${diff.inHours} hours ago";
+                      } else {
+                        return "${diff.inDays} days ago";
+                      }
+                    }(), style: TextStyle(fontSize: 16, color: Colors.grey),
                     ),
                   ],
                 ),
@@ -130,7 +134,7 @@ class _PostMainState extends State<PostMain> {
   void _showOption() {
     showModalBottomSheet(
       context: context,
-      isScrollControlled: true , //ทำให้เต็มจอ
+      isScrollControlled: true, //ทำให้เต็มจอ
       builder:
           (ctx) => DraggableScrollableSheet(
             expand: false, //ไม่ใส่ false จะเต็มจอ
@@ -212,7 +216,7 @@ class _PostMainState extends State<PostMain> {
             isLiked ? Icons.favorite : Icons.favorite_outline,
             isLiked ? Colors.red : Colors.grey,
             "$favoriteCount",
-                () {
+            () {
               setState(() {
                 isLiked = !isLiked;
                 favoriteCount += isLiked ? 1 : -1;
@@ -223,7 +227,7 @@ class _PostMainState extends State<PostMain> {
             isBookmark ? Icons.bookmark : Icons.bookmark_border,
             isBookmark ? Color(0xff07699d) : Colors.grey,
             "$bookmarkCount",
-                () {
+            () {
               setState(() {
                 isBookmark = !isBookmark;
                 bookmarkCount += isBookmark ? 1 : -1;
