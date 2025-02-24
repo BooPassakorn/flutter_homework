@@ -12,7 +12,7 @@ class Appdata {
         isLiked: false,
         isBookmark: false,
         isVerified: false,
-        datePost: DateTime.utc(2025, 02, 1)
+        datePost: DateTime.parse("2025-02-01 20:05:04Z").toIso8601String(),
     ),
     PostInMain(
         id: 2,
@@ -24,7 +24,7 @@ class Appdata {
         isLiked: false,
         isBookmark: false,
         isVerified: true,
-        datePost: DateTime.utc(2025, 02, 15)
+        datePost: DateTime.parse("2025-02-15 10:05:04Z").toIso8601String(),
     ),
     PostInMain(
         id: 3,
@@ -36,7 +36,7 @@ class Appdata {
         isLiked: false,
         isBookmark: false,
         isVerified: true,
-        datePost: DateTime.utc(2025, 02, 24, 4, 49, 00) //ปี เดือน วัน ชั่วโมง นาที วินาที
+        datePost: DateTime.parse("2025-02-24 05:05:04Z").toIso8601String() //ปี เดือน วัน ชั่วโมง นาที วินาที
     ),
   ];
 }

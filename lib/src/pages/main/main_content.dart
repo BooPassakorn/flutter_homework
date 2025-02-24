@@ -104,7 +104,7 @@ class _PostMainState extends State<PostMain> {
                     ),
                     SizedBox(height: 4),
                     Text(() {
-                      Duration diff = DateTime.now().difference(widget.post.datePost);
+                      Duration diff = DateTime.now().difference(widget.post.datePostAsDateTime);
                       if (diff.inMinutes < 1) {
                         return "Just now";
                       } else if (diff.inMinutes < 60) {
