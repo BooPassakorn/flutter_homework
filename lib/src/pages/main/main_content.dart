@@ -3,17 +3,80 @@ import 'package:flutter_ui_homework/core/widget/info_post.dart';
 import 'package:flutter_ui_homework/src/model/data.dart';
 import 'package:flutter_ui_homework/src/model/post_in_main.dart';
 
-class MainContent extends StatelessWidget {
+class MainContent extends StatefulWidget {
   MainContent({Key? key}) : super(key: key);
 
   @override
+  _MainContentState createState() => _MainContentState();
+}
+
+class _MainContentState extends State<MainContent> {
+
+  late ScrollController _scrollController;
+  bool _showBackToTopButton = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController()..addListener(() {
+        setState(() {
+          _showBackToTopButton = _scrollController.offset >= 200;
+        });
+      });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _scrollToTop() {
+    _scrollController.animateTo(0, duration: const Duration(milliseconds: 1200),
+      curve: Curves.decelerate, //เอฟเฟกต์ชะลอความเร็วเมื่อถึงจุดบนสุด
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: Appdata.postInMainList.length,
-      itemBuilder: (context, index) {
-        final post = Appdata.postInMainList[index];
-        return PostMain(post: post);
-      },
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: ListView.builder(
+        controller: _scrollController,
+        itemCount: Appdata.postInMainList.length,
+        itemBuilder: (context, index) {
+          final post = Appdata.postInMainList[index];
+          return PostMain(post: post);
+        },
+      ),
+      floatingActionButton: AnimatedOpacity(
+        opacity: _showBackToTopButton ? 1.0 : 0.0, //ค่อยๆแสดง
+        duration: const Duration(milliseconds: 300),
+        child: Align(
+          alignment: Alignment.bottomCenter,
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 16.0),
+            child: SizedBox(
+              width: 115,
+              height: 35,
+              child: FloatingActionButton.extended(
+                onPressed: _scrollToTop,
+                backgroundColor: Color(0xff07699d),
+                label: Row(
+                  children: [
+                    Text(
+                      "New Post",
+                      style: TextStyle(color: Colors.white, fontSize: 16),
+                    ),
+                    SizedBox(width: 4),
+                    Icon(Icons.arrow_upward, color: Colors.white, size: 18),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -27,23 +90,17 @@ class PostMain extends StatefulWidget {
   _PostMainState createState() => _PostMainState();
 }
 
-class _PostMainState extends State<PostMain> {
-  late bool isLiked;
-  late bool isBookmark;
+class _PostMainState extends State<PostMain> with TickerProviderStateMixin {
+  bool isLiked = false;
+  late bool isBookmark = false;
 
   int favoriteCount = 0;
   int bookmarkCount = 0;
 
   @override
-  void initState() {
-    super.initState();
-    isLiked = widget.post.isLiked;
-    isBookmark = widget.post.isBookmark;
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Container(
+      color: Colors.white,
       child: SingleChildScrollView(
         child: Column(
           children: [
