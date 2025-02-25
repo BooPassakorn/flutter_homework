@@ -16,10 +16,25 @@ class ProfilePage extends StatelessWidget {
               alignment: Alignment.center,
               children: [
                 Image.asset(
-                  'assets/wallpaper.jpg',
+                  'assets/wallpaper2.jpg',
                   width: double.infinity,
                   height: 180,
                   fit: BoxFit.cover,
+                ),
+                Positioned(
+                  top: 50, //ตำแหน่งด้านบน
+                  right: 30, //ตำแหน่งทางขวา
+                  child: Container(
+                    width: 30,
+                    height: 30,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.black12,
+                    ),
+                    child: Center(
+                      child: Icon(Icons.dehaze, size: 15, color: Colors.white70),
+                    ),
+                  ),
                 ),
                 Positioned(
                   bottom: -40,
