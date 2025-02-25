@@ -71,7 +71,7 @@ class ProfilePage extends StatelessWidget {
                     backgroundColor: Colors.white,
                     foregroundColor: Colors.blue,
                     elevation: 0,
-                    side: BorderSide(color: Colors.grey.shade400),
+                    side: BorderSide(color: Colors.grey.shade300),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -171,18 +171,18 @@ class AboutSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text("Basic Information", style: TextStyle(fontWeight: FontWeight.w200, fontSize: 25)),
-            const SizedBox(height: 10),
+            Text("Basic Information", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.grey)),
+            SizedBox(height: 10),
             _infoTile(Icons.person, "Gender", "Male"),
-            Divider(),
+            Divider(thickness: 0.7,),
             _infoTile(Icons.calendar_today, "Birth Of Date", "10 November 2024"),
-            Divider(),
-            _infoTile(Icons.language, "Languages", "Thai, English"),
-            Divider(),
+            Divider(thickness: 0.7,),
+            _infoTile(Icons.message, "Languages", "Thai, English"),
+            Divider(thickness: 0.7,),
           ],
         ),
       ),
@@ -192,12 +192,13 @@ class AboutSection extends StatelessWidget {
   Widget _infoTile(IconData icon, String title, String subtitle) {
     return ListTile(
       leading: CircleAvatar(
+        radius: 30,
         backgroundColor: Colors.blue.shade50,
-        child: Icon(icon, color: Colors.blue),
+        child: Icon(icon, color: Color(0xff07699d), size: 30,),
       ),
-      title: Text(title),
-      subtitle: Text(subtitle),
-      trailing: Icon(Icons.edit, color: Colors.grey),
+      title: Text(title, style: TextStyle(fontSize: 15, fontWeight:FontWeight.w400, color: Colors.grey),),
+      subtitle: Text(subtitle, style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),),
+      trailing: Icon(Icons.edit_outlined, color: Colors.grey[300], size: 27,),
     );
   }
 }
