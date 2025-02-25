@@ -90,20 +90,22 @@ class ProfilePage extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
+                    minimumSize: Size(150, 55)
                   ),
-                  child: Text("Edit Profile"),
+                  child: Text("Edit Profile",style: TextStyle(color: Color(0xff07699d), fontSize: 17),),
                 ),
                 SizedBox(width: 10),
                 ElevatedButton(
                   onPressed: () {},
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
+                    backgroundColor: Color(0xff07699d),
                     elevation: 0,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
+                    minimumSize: Size(20, 55)
                   ),
-                  child: Icon(Icons.share, color: Colors.white,),
+                  child: Icon(Icons.share, color: Colors.white, size: 17,),
                 ),
               ],
             ),
