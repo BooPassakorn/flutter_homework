@@ -12,6 +12,7 @@ class ProfilePage extends StatelessWidget {
         body: Column(
           children: [
             Stack(
+              clipBehavior: Clip.none, //ป้องกันการตัดภาพ
               alignment: Alignment.center,
               children: [
                 Image.asset(
@@ -77,7 +78,6 @@ class ProfilePage extends StatelessWidget {
                   ),
                   child: Text("Edit Profile"),
                 ),
-
                 SizedBox(width: 10),
                 ElevatedButton(
                   onPressed: () {},
@@ -96,20 +96,38 @@ class ProfilePage extends StatelessWidget {
             Divider(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: const [
+              children: [
                 ProfileStat(label: "Post", value: "21"),
                 ProfileStat(label: "Followers", value: "1,904"),
                 ProfileStat(label: "Following", value: "614"),
               ],
             ),
             Divider(),
-            const TabBar(
+            TabBar(
               labelColor: Colors.blue,
               unselectedLabelColor: Colors.grey,
               indicatorColor: Colors.blue,
               tabs: [
-                Tab(icon: Icon(Icons.grid_on), text: "Post"),
-                Tab(icon: Icon(Icons.info_outline), text: "About"),
+                Tab(
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.grid_view, size: 25,),
+                      SizedBox(width: 10,),
+                      Text("Post", style: TextStyle(fontSize: 22),),
+                    ],
+                  ),
+                ),
+                Tab(
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.account_box_outlined, size: 25,),
+                      SizedBox(width: 10 ,),
+                      Text("About", style: TextStyle(fontSize: 22),),
+                    ],
+                  ),
+                ),
               ],
             ),
             Expanded(
