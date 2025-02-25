@@ -24,13 +24,13 @@ class ProfilePage extends StatelessWidget {
                 Positioned(
                   bottom: -40,
                   child: CircleAvatar(
-                    radius: 50,
+                    radius: 65,
                     backgroundColor: Colors.white,
                     child: ClipOval(
                       child: Image.asset(
                         'assets/story1.jpg',
-                        width: 90,
-                        height: 90,
+                        width: 120,
+                        height: 120,
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -106,7 +106,8 @@ class ProfilePage extends StatelessWidget {
             TabBar(
               labelColor: Colors.blue,
               unselectedLabelColor: Colors.grey,
-              indicatorColor: Colors.blue,
+              indicatorColor: Colors.blue, //สีแถบด้านล่าง
+              indicatorSize: TabBarIndicatorSize.tab, //ขนาดเส้นแถบด้านล่าง
               tabs: [
                 Tab(
                   child: Row(
@@ -159,7 +160,7 @@ class ProfileStat extends StatelessWidget {
           value,
           style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
-        Text(label, style: const TextStyle(color: Colors.grey)),
+        Text(label, style: const TextStyle(color: Colors.black)),
       ],
     );
   }
@@ -168,17 +169,22 @@ class ProfileStat extends StatelessWidget {
 class AboutSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text("Basic Information", style: TextStyle(fontWeight: FontWeight.bold)),
-          const SizedBox(height: 10),
-          _infoTile(Icons.person, "Gender", "Male"),
-          _infoTile(Icons.calendar_today, "Birth Of Date", "10 November 2024"),
-          _infoTile(Icons.language, "Languages", "Thai, English"),
-        ],
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text("Basic Information", style: TextStyle(fontWeight: FontWeight.w200, fontSize: 25)),
+            const SizedBox(height: 10),
+            _infoTile(Icons.person, "Gender", "Male"),
+            Divider(),
+            _infoTile(Icons.calendar_today, "Birth Of Date", "10 November 2024"),
+            Divider(),
+            _infoTile(Icons.language, "Languages", "Thai, English"),
+            Divider(),
+          ],
+        ),
       ),
     );
   }
