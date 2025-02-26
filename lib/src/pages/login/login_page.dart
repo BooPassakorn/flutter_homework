@@ -99,15 +99,17 @@ class LoginPage extends StatelessWidget {
                   Text("- Or sign in with -",
                       style: TextStyle(color: Colors.grey)),
                   SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      _socialButton("assets/google.png"),
-                      SizedBox(width: 10),
-                      _socialButton("assets/facebook.png"),
-                      SizedBox(width: 10),
-                      _socialButton("assets/x.png"),
-                    ],
+                  Container(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        _socialButton("assets/google.png"),
+                        SizedBox(width: 17.5),
+                        _socialButton("assets/facebook.png"),
+                        SizedBox(width: 17.5),
+                        _socialButton("assets/x.png"),
+                      ],
+                    ),
                   ),
                 ],
               ),

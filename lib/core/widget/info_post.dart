@@ -5,9 +5,7 @@ class InfoPost extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: double.infinity,
+    return SingleChildScrollView(
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 10),
         child: Column(
@@ -99,7 +97,7 @@ class InfoPost extends StatelessWidget {
                   child: Icon(Icons.info_outline, size: 33),
                 ),
                 const SizedBox(width: 10),
-                Text("ทำไมคุณจึงเห็นฌพสต์นี้", style: TextStyle(fontSize: 18)),
+                Text("ทำไมคุณจึงเห็นโพสต์นี้", style: TextStyle(fontSize: 18)),
               ],
             ),
             const SizedBox(height: 5),

@@ -38,7 +38,8 @@ class CustomConfirmDialog extends StatelessWidget {
 
   Widget _content(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.all(8),
+      width: MediaQuery.of(context).size.aspectRatio,
+      margin: EdgeInsets.all(0),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(15),
@@ -55,27 +56,30 @@ class CustomConfirmDialog extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                child: Column(
-                  children: [
-                    Column(
-                      children: [
-                        SvgPicture.asset(
-                          assetImage,
-                          height: 50,
-                          width: 50,
-                        ),
-                        // Image.asset(
-                        //   assetImage,
-                        //   height: 50,
-                        //   width: 50,
-                        // ),
-                        const SizedBox(
-                          height: 14,
-                        ),
-                      ],
-                    ),
-                    TitleText(text: title),
-                  ],
+                child: Container(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Column(
+                        children: [
+                          SvgPicture.asset(
+                            assetImage,
+                            height: 50,
+                            width: 50,
+                          ),
+                          // Image.asset(
+                          //   assetImage,
+                          //   height: 50,
+                          //   width: 50,
+                          // ),
+                          const SizedBox(
+                            height: 14,
+                          ),
+                        ],
+                      ),
+                      TitleText(text: title),
+                    ],
+                  ),
                 ),
               ),
             ],
