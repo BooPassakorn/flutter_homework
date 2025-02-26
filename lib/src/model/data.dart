@@ -41,5 +41,18 @@ class Appdata {
         datePost: DateTime.parse("2025-02-24 05:05:04Z").toIso8601String(), //ปี เดือน วัน ชั่วโมง นาที วินาที
         isRecommand: false,
     ),
+    PostInMain(
+      id: 4,
+      name: "primmie",
+      nickname: "@primmieq",
+      imageProfile: "assets/profileprimmie.jpg",
+      imagePost: "assets/post4.jpg",
+      detailPost: '#VLR Papaphat "Primmie" Sriprapha (born October 8, 2004) is a Thai player who is currently playing for TALON.',
+      isLiked: false,
+      isBookmark: false,
+      isVerified: true,
+      datePost: DateTime.parse("2025-02-26 05:05:04Z").toIso8601String(), //ปี เดือน วัน ชั่วโมง นาที วินาที
+      isRecommand: true,
+    ),
   ];
 }

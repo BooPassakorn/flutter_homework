@@ -8,8 +8,7 @@ class RecommandPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final recommandPosts =
-        Appdata.postInMainList.where((post) => post.isRecommand).toList();
+    final recommandPosts = Appdata.postInMainList.where((post) => post.isRecommand).toList();
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -73,14 +72,13 @@ class _PostRecommandState extends State<PostRecommand>
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20),
       color: Colors.white,
       child: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(height: 20),
+            SizedBox(height: 10),
             Container(
-              // padding: EdgeInsets.symmetric(horizontal: 20),
+              padding: EdgeInsets.symmetric(horizontal: 20),
               child: Row(
                 children: [
                   Icon(Icons.star, color: Colors.yellow, size: 27),
@@ -96,29 +94,34 @@ class _PostRecommandState extends State<PostRecommand>
                 ],
               ),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 10),
             Container(
-              padding: EdgeInsets.only(
-                left: 10,
-                top: 15,
-                right: 10,
-                bottom: 10,
-              ),
-              decoration: BoxDecoration(
-                border: Border.all(width: 1, color: Colors.grey.shade300),
-                borderRadius: BorderRadius.circular(15),
-              ),
-              child: Column(
-                children: [
-                  _profile(),
-                  _imagePost(),
-                  _detailPost(),
-                  _iconPosts(),
-                ],
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: Container(
+                padding: EdgeInsets.only(
+                  left: 10,
+                  top: 15,
+                  right: 10,
+                  bottom: 10,
+                ),
+                decoration: BoxDecoration(
+                  border: Border.all(width: 1, color: Colors.grey.shade300),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Column(
+                  children: [
+                    _profile(),
+                    _imagePost(),
+                    _detailPost(),
+                    _iconPosts(),
+                  ],
+                ),
               ),
             ),
             SizedBox(height: 15),
             _iconLikeAndDisLike(),
+            SizedBox(height: 10),
+            Divider()
           ],
         ),
       ),
@@ -312,6 +315,7 @@ class _PostRecommandState extends State<PostRecommand>
 
   Widget _iconLikeAndDisLike() {
     return Container(
+      width: MediaQuery.of(context).size.width * 0.9,
       padding: EdgeInsets.symmetric(horizontal: 10),
       decoration: BoxDecoration(
         color: Colors.blue.shade50,
@@ -357,3 +361,4 @@ class _PostRecommandState extends State<PostRecommand>
     );
   }
 }
+
