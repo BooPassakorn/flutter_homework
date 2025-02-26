@@ -8,6 +8,7 @@ class RecommandPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     final allPosts = Appdata.postInMainList; //ดึงข้อมูลทั้งหมด
     final recommandPosts = allPosts.where((post) => post.isRecommand).toList();
     final normalPosts = allPosts.where((post) => !post.isRecommand).toList();
@@ -386,7 +387,6 @@ class _PostNormalState extends State<PostNormal> {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.white,
-      // padding: EdgeInsets.symmetric(vertical: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
