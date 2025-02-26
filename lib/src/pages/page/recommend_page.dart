@@ -88,7 +88,7 @@ class _PostRecommandState extends State<PostRecommand>
                   Icon(Icons.star, color: Colors.yellow, size: 27),
                   SizedBox(width: 10),
                   Text(
-                    "Recommand for you",
+                    "Recommended For you",
                     style: TextStyle(
                       fontSize: 17,
                       fontWeight: FontWeight.bold,

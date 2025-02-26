@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ui_homework/main.dart';
 import 'package:flutter_ui_homework/src/pages/page/profile_page.dart';
-import 'package:flutter_ui_homework/src/pages/page/recommand_page.dart';
+import 'package:flutter_ui_homework/src/pages/page/recommend_page.dart';
 import 'package:get/get.dart';
 
 class NavigationBarPage extends StatelessWidget {
