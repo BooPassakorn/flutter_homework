@@ -46,7 +46,7 @@ class RecommandPage extends StatelessWidget {
         itemCount: mergePosts.length,
         itemBuilder: (context, index) {
           final post = mergePosts[index];
-          return post.isRecommand ? PostRecommand(post: post) : PostNormal(post: post);
+          return post.isRecommand ? PostRecommand(post: post, index: index) : PostNormal(post: post, index: index);
         },
       ),
     );
@@ -54,9 +54,10 @@ class RecommandPage extends StatelessWidget {
 }
 
 class PostRecommand extends StatefulWidget {
-  const PostRecommand({super.key, required this.post});
+  const PostRecommand({super.key, required this.post, required this.index});
 
   final PostInMain post;
+  final int index;
 
   @override
   State<PostRecommand> createState() => _PostRecommandState();
@@ -73,6 +74,8 @@ class _PostRecommandState extends State<PostRecommand>
   int favoriteCount = 0;
   int bookmarkCount = 0;
 
+  bool postRecommend = true;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -81,6 +84,7 @@ class _PostRecommandState extends State<PostRecommand>
         child: Column(
           children: [
             SizedBox(height: 10),
+            widget.index == 0?
             Container(
               padding: EdgeInsets.symmetric(horizontal: 20),
               child: Row(
@@ -97,7 +101,7 @@ class _PostRecommandState extends State<PostRecommand>
                   ),
                 ],
               ),
-            ),
+            ):SizedBox(),
             SizedBox(height: 10),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 20),
@@ -368,9 +372,10 @@ class _PostRecommandState extends State<PostRecommand>
 
 class PostNormal extends StatefulWidget {
 
-  const PostNormal({super.key, required this.post});
+  const PostNormal({super.key, required this.post, required this.index});
 
   final PostInMain post;
+  final int index;
 
   @override
   State<PostNormal> createState() => _PostNormalState();
@@ -390,6 +395,7 @@ class _PostNormalState extends State<PostNormal> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          widget.index == 2?
           Container(
             padding: EdgeInsets.symmetric(horizontal: 20),
             child: Row(
@@ -406,7 +412,7 @@ class _PostNormalState extends State<PostNormal> {
                 ),
               ],
             ),
-          ),
+          ):SizedBox(),
           SizedBox(height: 10),
           _profile(),
           _imagePost(),

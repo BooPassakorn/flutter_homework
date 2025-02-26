@@ -13,7 +13,7 @@ class Appdata {
         isBookmark: false,
         isVerified: false,
         datePost: DateTime.parse("2025-02-01 20:05:04Z").toIso8601String(),
-        isRecommand: false,
+        isRecommand: true,
     ),
     PostInMain(
         id: 2,
@@ -48,6 +48,19 @@ class Appdata {
       imageProfile: "assets/profileprimmie.jpg",
       imagePost: "assets/post4.jpg",
       detailPost: '#VLR Papaphat "Primmie" Sriprapha (born October 8, 2004) is a Thai player who is currently playing for TALON.',
+      isLiked: false,
+      isBookmark: false,
+      isVerified: true,
+      datePost: DateTime.parse("2025-02-26 05:05:04Z").toIso8601String(), //ปี เดือน วัน ชั่วโมง นาที วินาที
+      isRecommand: true,
+    ),
+    PostInMain(
+      id: 5,
+      name: "edg",
+      nickname: "@EDGGAMING",
+      imageProfile: "assets/profile_edg.jpg",
+      imagePost: "assets/post5.jpg",
+      detailPost: 'Edward Gaming is the best Valorant team in the world. The Chinese squad secured the Valorant Champions 2024 trophy in Seoul, South Korea, with an epic 3-2 victory over EMEA squad Team Heretics.',
       isLiked: false,
       isBookmark: false,
       isVerified: true,
