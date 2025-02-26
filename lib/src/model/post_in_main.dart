@@ -9,6 +9,7 @@ class PostInMain {
   bool isBookmark;
   bool isVerified;
   String datePost;
+  bool isRecommand;
 
   PostInMain(
       {required this.id,
@@ -20,7 +21,8 @@ class PostInMain {
       required this.isLiked,
       required this.isBookmark,
       required this.isVerified,
-      required this.datePost});
+      required this.datePost,
+      required this.isRecommand});
 
   DateTime get datePostAsDateTime => DateTime.parse(datePost); //แปลงdatePost ให้เป็น DateTime
 }
