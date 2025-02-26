@@ -92,7 +92,7 @@ class PostMain extends StatefulWidget {
 
 class _PostMainState extends State<PostMain> with TickerProviderStateMixin {
   bool isLiked = false;
-  late bool isBookmark = false;
+  bool isBookmark = false;
 
   int favoriteCount = 0;
   int bookmarkCount = 0;
@@ -116,74 +116,68 @@ class _PostMainState extends State<PostMain> with TickerProviderStateMixin {
   }
 
   Widget _profile() {
-    return Card(
-      margin: EdgeInsets.symmetric(horizontal: 16),
-      shadowColor: Colors.white,
-      color: Colors.white,
-      elevation: 0,
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Stack(
-                  alignment: Alignment(1, 1.2),
-                  children: [
-                    CircleAvatar(
-                      backgroundImage: AssetImage(widget.post.imageProfile),
-                      radius: 25,
-                    ),
-                    if (widget.post.isVerified)
-                      Icon(Icons.verified, color: Colors.blue, size: 20),
-                  ],
-                ),
-                SizedBox(width: 16),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          widget.post.name,
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Stack(
+                alignment: Alignment(1, 1.2),
+                children: [
+                  CircleAvatar(
+                    backgroundImage: AssetImage(widget.post.imageProfile),
+                    radius: 25,
+                  ),
+                  if (widget.post.isVerified)
+                    Icon(Icons.verified, color: Colors.blue, size: 20),
+                ],
+              ),
+              SizedBox(width: 16),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        widget.post.name,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
                         ),
-                        SizedBox(width: 5),
-                        Text(
-                          widget.post.nickname,
-                          style: TextStyle(fontSize: 16, color: Colors.grey),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 4),
-                    Text(() {
-                      Duration diff = DateTime.now().difference(widget.post.datePostAsDateTime);
-                      if (diff.inMinutes < 1) {
-                        return "Just now";
-                      } else if (diff.inMinutes < 60) {
-                        return "${diff.inMinutes} mins ago";
-                      } else if (diff.inHours < 24) {
-                        return "${diff.inHours} hours ago";
-                      } else {
-                        return "${diff.inDays} days ago";
-                      }
-                    }(), style: TextStyle(fontSize: 16, color: Colors.grey),
-                    ),
-                  ],
-                ),
-                Spacer(),
-                IconButton(
-                  onPressed: (_showOption),
-                  icon: Icon(Icons.more_horiz),
-                ),
-              ],
-            ),
-          ],
-        ),
+                      ),
+                      SizedBox(width: 5),
+                      Text(
+                        widget.post.nickname,
+                        style: TextStyle(fontSize: 16, color: Colors.grey),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 4),
+                  Text(() {
+                    Duration diff = DateTime.now().difference(widget.post.datePostAsDateTime);
+                    if (diff.inMinutes < 1) {
+                      return "Just now";
+                    } else if (diff.inMinutes < 60) {
+                      return "${diff.inMinutes} mins ago";
+                    } else if (diff.inHours < 24) {
+                      return "${diff.inHours} hours ago";
+                    } else {
+                      return "${diff.inDays} days ago";
+                    }
+                  }(), style: TextStyle(fontSize: 16, color: Colors.grey),
+                  ),
+                ],
+              ),
+              Spacer(),
+              IconButton(
+                onPressed: (_showOption),
+                icon: Icon(Icons.more_horiz),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
