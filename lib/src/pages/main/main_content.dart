@@ -262,7 +262,7 @@ class _PostMainState extends State<PostMain> with TickerProviderStateMixin {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          _iconButton(Icons.mode_comment_outlined, Colors.grey, "0", () {}),
+          _iconButton(Icons.chat_bubble_outline, Colors.grey, "0", () {}),
           _iconButton(
             isLiked ? Icons.favorite : Icons.favorite_outline,
             isLiked ? Colors.red : Colors.grey,

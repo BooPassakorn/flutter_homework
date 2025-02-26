@@ -8,7 +8,10 @@ class RecommandPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final recommandPosts = Appdata.postInMainList.where((post) => post.isRecommand).toList();
+    final allPosts = Appdata.postInMainList; //ดึงข้อมูลทั้งหมด
+    final recommandPosts = allPosts.where((post) => post.isRecommand).toList();
+    final normalPosts = allPosts.where((post) => !post.isRecommand).toList();
+    final mergePosts = [...recommandPosts, ...normalPosts]; //spread operator เอา normalPosts ต่อ recommandPosts
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -39,10 +42,10 @@ class RecommandPage extends StatelessWidget {
         ),
       ),
       body: ListView.builder(
-        itemCount: recommandPosts.length,
+        itemCount: mergePosts.length,
         itemBuilder: (context, index) {
-          final post = recommandPosts[index];
-          return PostRecommand(post: post);
+          final post = mergePosts[index];
+          return post.isRecommand ? PostRecommand(post: post) : PostNormal(post: post);
         },
       ),
     );
@@ -121,7 +124,7 @@ class _PostRecommandState extends State<PostRecommand>
             SizedBox(height: 15),
             _iconLikeAndDisLike(),
             SizedBox(height: 10),
-            Divider()
+            Divider(),
           ],
         ),
       ),
@@ -270,7 +273,7 @@ class _PostRecommandState extends State<PostRecommand>
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          _iconButton(Icons.mode_comment_outlined, Colors.grey, "0", () {}),
+          _iconButton(Icons.chat_bubble_outline, Colors.grey, "0", () {}),
           _iconButton(
             isLiked ? Icons.favorite : Icons.favorite_outline,
             isLiked ? Colors.red : Colors.grey,
@@ -361,4 +364,250 @@ class _PostRecommandState extends State<PostRecommand>
     );
   }
 }
+
+class PostNormal extends StatefulWidget {
+
+  const PostNormal({super.key, required this.post});
+
+  final PostInMain post;
+
+  @override
+  State<PostNormal> createState() => _PostNormalState();
+}
+
+class _PostNormalState extends State<PostNormal> {
+  bool isLiked = false;
+  bool isBookmark = false;
+
+  int favoriteCount = 0;
+  int bookmarkCount = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.white,
+      // padding: EdgeInsets.symmetric(vertical: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Row(
+              children: [
+                Icon(Icons.explore_rounded, color: Color(0xff07699d), size: 27),
+                SizedBox(width: 10),
+                Text(
+                  "Trending Post",
+                  style: TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 10),
+          _profile(),
+          _imagePost(),
+          _detailPost(),
+          _iconPosts(),
+          SizedBox(height: 10),
+          Divider(),
+        ],
+      ),
+    );
+  }
+
+  Widget _profile() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Stack(
+                alignment: Alignment(1, 1.2),
+                children: [
+                  CircleAvatar(
+                    backgroundImage: AssetImage(widget.post.imageProfile),
+                    radius: 25,
+                  ),
+                  if (widget.post.isVerified)
+                    Icon(Icons.verified, color: Colors.blue, size: 20),
+                ],
+              ),
+              SizedBox(width: 16),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        widget.post.name,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                      SizedBox(width: 5),
+                      Text(
+                        widget.post.nickname,
+                        style: TextStyle(fontSize: 16, color: Colors.grey),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 4),
+                  Text(() {
+                    Duration diff = DateTime.now().difference(widget.post.datePostAsDateTime);
+                    if (diff.inMinutes < 1) {
+                      return "Just now";
+                    } else if (diff.inMinutes < 60) {
+                      return "${diff.inMinutes} mins ago";
+                    } else if (diff.inHours < 24) {
+                      return "${diff.inHours} hours ago";
+                    } else {
+                      return "${diff.inDays} days ago";
+                    }
+                  }(), style: TextStyle(fontSize: 16, color: Colors.grey),
+                  ),
+                ],
+              ),
+              Spacer(),
+              IconButton(
+                onPressed: (_showOption),
+                icon: Icon(Icons.more_horiz),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showOption() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true, //ทำให้เต็มจอ
+      builder:
+          (ctx) => DraggableScrollableSheet(
+        expand: false, //ไม่ใส่ false จะเต็มจอ
+        initialChildSize: 0.67,
+        builder: (_, controller) => InfoPost(scrollController: controller),
+      ),
+    );
+  }
+
+  Widget _imagePost() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(15),
+        child: Image.asset(widget.post.imagePost),
+      ),
+    );
+  }
+
+  Widget _makeColorHashtag(String text) {
+    List<TextSpan> spans = [];
+    RegExp regExp = RegExp(
+      r"(#[^\s]+)",
+    ); //ตรวจคำที่มี # นำหน้า ความหมาย # ต้องมี # เป็นตัวแรก [^\s]+ หมายถึงตัวอักษรที่ไม่ใช่ช่องว่าง (\s) อย่างน้อย 1 ตัวขึ้นไป
+    Iterable<RegExpMatch> matches = regExp.allMatches(
+      text,
+    ); //allMatches(text) ค้นหาทุกคำที่ตรงกับ RegExp ที่อยู่ใน text คืนค่ามาเป็น Iterable ที่จะเก็บข้อมูลเกี่ยวกับการจับคู่แต่ละคำ
+
+    int lastIndex =
+    0; //ไว้เก็บตำแหน่งสุดท้ายข้อความที่่ถูกตรวจแล้ว เอาไปใช้เพื่อตัดข้อความที่ไม่มี # ออก
+    for (RegExpMatch match in matches) {
+      if (match.start > lastIndex) {
+        //match.start ตำแหน่งเริ่มต้นของ # ใน text || lastIndex ตำแหน่งข้อความก่อนหน้า ถ้ามีข้อความอยู่ก่อนหน้า # จะถูกนำมาใส่ spans และสีจะไม่เปลี่ยน
+        spans.add(TextSpan(text: text.substring(lastIndex, match.start)));
+      }
+      spans.add(
+        TextSpan(
+          text: match.group(0), //ดึง # ออกมา
+          style: TextStyle(color: Colors.blue), //กำหนด # ให้เป็นสีฟ้า
+        ),
+      );
+      lastIndex =
+          match
+              .end; //กำหนด lastIndex ให้เป็นตำแหน่งที่ # จบลง ใช้ตัดข้อความที่เหลือ
+    }
+
+    if (lastIndex < text.length) {
+      //ตรวจสอบว่ามีข้อความที่ยังไม่ได้แสดงหลัง # สุดท้าย ถ้ามี จะถูกเพิ่มใน spans
+      spans.add(TextSpan(text: text.substring(lastIndex)));
+    }
+
+    return RichText(
+      text: TextSpan(
+        style: DefaultTextStyle.of(context).style.copyWith(fontSize: 15),
+        children: spans,
+      ),
+    );
+  }
+
+  Widget _detailPost() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      child: _makeColorHashtag(widget.post.detailPost),
+      // child: Text(
+      //   widget.post.detailPost,
+      //   style: TextStyle(fontSize: 15),
+      // ),
+    );
+  }
+
+  Widget _iconPosts() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          _iconButton(Icons.chat_bubble_outline, Colors.grey, "0", () {}),
+          _iconButton(
+            isLiked ? Icons.favorite : Icons.favorite_outline,
+            isLiked ? Colors.red : Colors.grey,
+            "$favoriteCount",
+                () {
+              setState(() {
+                isLiked = !isLiked;
+                favoriteCount += isLiked ? 1 : -1;
+              });
+            },
+          ),
+          _iconButton(
+            isBookmark ? Icons.bookmark : Icons.bookmark_border,
+            isBookmark ? Color(0xff07699d) : Colors.grey,
+            "$bookmarkCount",
+                () {
+              setState(() {
+                isBookmark = !isBookmark;
+                bookmarkCount += isBookmark ? 1 : -1;
+              });
+            },
+          ),
+          _iconButton(Icons.file_upload_outlined, Colors.grey, "0", () {}),
+        ],
+      ),
+    );
+  }
+
+  Widget _iconButton(
+      IconData icon,
+      Color color,
+      String text,
+      VoidCallback onPressed,
+      ) {
+    return Row(
+      children: [
+        IconButton(onPressed: onPressed, icon: Icon(icon, color: color)),
+        Text(text),
+      ],
+    );
+  }
+}
+
 

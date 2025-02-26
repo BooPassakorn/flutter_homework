@@ -13,7 +13,7 @@ class Appdata {
         isBookmark: false,
         isVerified: false,
         datePost: DateTime.parse("2025-02-01 20:05:04Z").toIso8601String(),
-        isRecommand: true,
+        isRecommand: false,
     ),
     PostInMain(
         id: 2,
