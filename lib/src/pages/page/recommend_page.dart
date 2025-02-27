@@ -10,9 +10,12 @@ class RecommandPage extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final allPosts = Appdata.postInMainList; //ดึงข้อมูลทั้งหมด
-    final recommandPosts = allPosts.where((post) => post.isRecommand).toList();
+    final recommendPosts = allPosts.where((post) => post.isRecommand).toList();
     final normalPosts = allPosts.where((post) => !post.isRecommand).toList();
-    final mergePosts = [...recommandPosts, ...normalPosts]; //spread operator เอา normalPosts ต่อ recommandPosts
+    final mergePosts = [...recommendPosts, ...normalPosts]; //spread operator เอา normalPosts ต่อ recommandPosts
+
+    final firstRecommendIndex = recommendPosts.isNotEmpty ? mergePosts.indexOf(recommendPosts.first) : -1; //-1 ถ้าไม่มีข้อมูล
+    final firstNormalIndex = normalPosts.isNotEmpty ? mergePosts.indexOf(normalPosts.first) : -1;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -46,7 +49,11 @@ class RecommandPage extends StatelessWidget {
         itemCount: mergePosts.length,
         itemBuilder: (context, index) {
           final post = mergePosts[index];
-          return post.isRecommand ? PostRecommand(post: post, index: index) : PostNormal(post: post, index: index);
+          if (post.isRecommand) {
+            return PostRecommand(post: post, isFirst: index == firstRecommendIndex); //ถ้า index ตัวแรก ตรงกับ firstRecommendIndex isFirst จะมีค่าเป็น True ถ้าไม่ใช่ตัวแรกจะให้เป็น false
+          } else {
+            return PostNormal(post: post, isFirst: index == firstNormalIndex);
+          }
         },
       ),
     );
@@ -54,10 +61,10 @@ class RecommandPage extends StatelessWidget {
 }
 
 class PostRecommand extends StatefulWidget {
-  const PostRecommand({super.key, required this.post, required this.index});
+  const PostRecommand({super.key, required this.post,required this.isFirst});
 
   final PostInMain post;
-  final int index;
+  final bool isFirst;
 
   @override
   State<PostRecommand> createState() => _PostRecommandState();
@@ -84,7 +91,7 @@ class _PostRecommandState extends State<PostRecommand>
         child: Column(
           children: [
             SizedBox(height: 10),
-            widget.index == 0?
+            widget.isFirst?
             Container(
               padding: EdgeInsets.symmetric(horizontal: 20),
               child: Row(
@@ -372,10 +379,10 @@ class _PostRecommandState extends State<PostRecommand>
 
 class PostNormal extends StatefulWidget {
 
-  const PostNormal({super.key, required this.post, required this.index});
+  const PostNormal({super.key, required this.post, required this.isFirst});
 
   final PostInMain post;
-  final int index;
+  final bool isFirst;
 
   @override
   State<PostNormal> createState() => _PostNormalState();
@@ -395,7 +402,8 @@ class _PostNormalState extends State<PostNormal> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          widget.index == 2?
+          SizedBox(height: 5),
+          widget.isFirst?
           Container(
             padding: EdgeInsets.symmetric(horizontal: 20),
             child: Row(

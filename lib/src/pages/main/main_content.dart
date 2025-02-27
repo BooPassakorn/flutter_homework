@@ -104,7 +104,7 @@ class _PostMainState extends State<PostMain> with TickerProviderStateMixin {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            const Divider(thickness: 1, height: 70),
+            const Divider(thickness: 1, height: 30),
             _profile(),
             _imagePost(),
             _detailPost(),
