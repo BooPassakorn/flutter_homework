@@ -14,7 +14,7 @@ class RecommandPage extends StatelessWidget {
     final normalPosts = allPosts.where((post) => !post.isRecommand).toList();
     final mergePosts = [...recommendPosts, ...normalPosts]; //spread operator เอา normalPosts ต่อ recommandPosts
 
-    final firstRecommendIndex = recommendPosts.isNotEmpty ? mergePosts.indexOf(recommendPosts.first) : -1; //-1 ถ้าไม่มีข้อมูล
+    final firstRecommendIndex = recommendPosts.isNotEmpty ? mergePosts.indexOf(recommendPosts.first) : -1; //-1 ถ้าไม่มีข้อมูล -1 เพราะไม่มีข้อมูลใน list แน่ๆ
     final firstNormalIndex = normalPosts.isNotEmpty ? mergePosts.indexOf(normalPosts.first) : -1;
 
     return Scaffold(
