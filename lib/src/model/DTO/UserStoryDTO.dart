@@ -11,7 +11,7 @@ class UserStoryDTO {
   Uuid? uuid;
   String? user_name;
   ByteData? user_profile;
-  Bool? story;
+  bool? story;
 
   UserStoryDTO({
     this.uuid,

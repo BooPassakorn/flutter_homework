@@ -8,14 +8,14 @@ class User {
   String? user_id;
   String? user_name;
   ByteData? user_profile;
-  Bool? user_verified;
+  bool? user_verified;
   String? user_introduce;
   String? user_gender;
   DateTime? user_date_of_birth;
   Long? followers;
   Long? following;
   Long? post;
-  Bool? story;
+  bool? story;
 
   User({
     this.uuid,

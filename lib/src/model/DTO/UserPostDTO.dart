@@ -9,12 +9,12 @@ class UserPostDTO {
   String? user_id;
   String? user_name;
   ByteData? user_profile;
-  Bool? user_verified;
+  bool? user_verified;
   DateTime? post_created_datetime;
   String? post_caption;
   ByteData? post_image;
-  Bool? post_recommend;
-  Bool? post_trending;
+  bool? post_recommend;
+  bool? post_trending;
 
   UserPostDTO({
     this.post_id,

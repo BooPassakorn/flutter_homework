@@ -6,8 +6,8 @@ class Post{
   DateTime? post_created_datetime;
   String? post_caption;
   ByteData? post_image;
-  Bool? post_recommend;
-  Bool? post_trending;
+  bool? post_recommend;
+  bool? post_trending;
 
   Post ({
     this.post_id,
