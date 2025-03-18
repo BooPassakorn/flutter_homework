@@ -1,18 +1,15 @@
-import 'dart:ffi';
 import 'dart:typed_data';
-
-import 'package:uuid/uuid.dart';
 
 class UserPostDTO {
   int? post_id;
-  Uuid? uuid;
+  String? uuid;
   String? user_id;
   String? user_name;
-  ByteData? user_profile;
+  Uint8List? user_profile;
   bool? user_verified;
   DateTime? post_created_datetime;
   String? post_caption;
-  ByteData? post_image;
+  Uint8List? post_image;
   bool? post_recommend;
   bool? post_trending;
 

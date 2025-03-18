@@ -8,9 +8,9 @@ import 'package:http/http.dart' as http;
 import 'package:uuid/uuid.dart';
 
 class UserStoryDTO {
-  Uuid? uuid;
+  String? uuid;
   String? user_name;
-  ByteData? user_profile;
+  Uint8List? user_profile;
   bool? story;
 
   UserStoryDTO({

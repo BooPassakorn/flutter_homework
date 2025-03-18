@@ -1,11 +1,10 @@
-import 'dart:ffi';
 import 'dart:typed_data';
 
 class Post{
   int? post_id;
   DateTime? post_created_datetime;
   String? post_caption;
-  ByteData? post_image;
+  Uint8List? post_image;
   bool? post_recommend;
   bool? post_trending;
 

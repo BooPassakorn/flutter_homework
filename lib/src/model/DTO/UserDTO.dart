@@ -1,13 +1,11 @@
 import 'dart:ffi';
 import 'dart:typed_data';
 
-import 'package:uuid/uuid.dart';
-
 class UserDTO {
-  Uuid? uuid;
+  String? uuid;
   String? user_id;
   String? user_name;
-  ByteData? user_profile;
+  Uint8List? user_profile;
   bool? user_verified;
   String? user_introduce;
   String? user_gender;

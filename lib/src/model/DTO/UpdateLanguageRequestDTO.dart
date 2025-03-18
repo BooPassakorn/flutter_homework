@@ -1,9 +1,8 @@
 import 'package:flutter_ui_homework/src/model/DTO/UserLanguagesDTO.dart';
-import 'package:uuid/uuid.dart';
 
 class UpdateLanguageRequestDTO {
   List<UserLanguagesDTO>? languages;
-  Uuid? uuid;
+  String? uuid;
 
   UpdateLanguageRequestDTO({
     this.languages,

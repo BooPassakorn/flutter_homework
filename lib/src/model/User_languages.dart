@@ -1,8 +1,6 @@
-import 'package:uuid/uuid.dart';
-
 class User_Languages {
   int? language_id;
-  Uuid? uuid;
+  String? uuid;
 
   User_Languages({
     this.language_id,
