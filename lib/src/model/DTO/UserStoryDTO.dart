@@ -1,11 +1,5 @@
 import 'dart:convert';
-import 'dart:ffi';
-import 'dart:nativewrappers/_internal/vm/lib/typed_data_patch.dart';
-import 'package:flutter_ui_homework/constant/constant_value.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-import 'package:http/http.dart' as http;
-import 'package:uuid/uuid.dart';
+import 'dart:typed_data';
 
 class UserStoryDTO {
   String? uuid;
@@ -23,10 +17,13 @@ class UserStoryDTO {
   factory UserStoryDTO.fromJsonToUserStoryDTO(Map<String, dynamic> json) => UserStoryDTO(
     uuid: json['uuid'],
     user_name: json['user_name'],
-    user_profile: json['user_profile'],
+    user_profile: json['user_profile'] != null
+        ? base64Decode(json['user_profile'])
+        : null,
     story: json['story'],
   );
 }
+
 
 // class userStory {
 //   static const String baseUrl = (baseURL + '/story-users');

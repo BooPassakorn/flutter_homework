@@ -1,12 +1,19 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_ui_homework/core/config/routes.dart';
 import 'package:flutter_ui_homework/core/di/auth_controller.dart';
 import 'package:flutter_ui_homework/core/di/di.dart';
 import 'package:flutter_ui_homework/core/lifecycle/lifecycle_listener.dart';
 import 'package:flutter_ui_homework/core/widget/custom_confirm_dialog.dart';
+import 'package:flutter_ui_homework/src/model/DTO/UserStoryDTO.dart';
 import 'package:flutter_ui_homework/src/pages/main/main_content.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 import 'package:lottie/lottie.dart';
+
+import 'constant/constant_value.dart';
 
 void main() async {
   await initGetX();
@@ -30,13 +37,43 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MyHomePage extends StatelessWidget with LifecycleListenerEvent {
-  // MyHomePage({Key? key}) : super(key: key);
+class MyHomePage extends StatefulWidget  {
+  const MyHomePage({Key? key}) : super(key: key);
 
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> with LifecycleListenerEvent {
   late LifecycleListener _lifecycleListener;
 
-  MyHomePage({Key? key}) : super(key: key) {
+  List<UserStoryDTO> storyList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchAllStoryUser();
+
     _lifecycleListener = LifecycleListener(providerInstance: this);
+  }
+
+  Future<void> _fetchAllStoryUser() async {
+    try {
+      final url = Uri.parse('$baseURL/api/user/get-all-story-users');
+      http.Response response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        List<dynamic> jsonData = jsonDecode(utf8.decode(response.bodyBytes));
+
+        setState(() {
+          storyList = jsonData.map((json) => UserStoryDTO.fromJsonToUserStoryDTO(json)).toList();
+        });
+      } else {
+        print('Server responded with status: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error fetching posts: $e');
+    }
   }
 
   @override
@@ -128,18 +165,30 @@ class MyHomePage extends StatelessWidget with LifecycleListenerEvent {
           children: [
             Container(
               height: 100,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: [
-                  StoryItem(name: 'Your Story', imagePath: 'assets/story1.jpg'),
-                  StoryItem(name: 'pattanap...', imagePath: 'assets/story2.jpg'),
-                  StoryItem(name: 'bufrghm...', imagePath: 'assets/story3.jpg'),
-                  StoryItem(name: '13161.jpg', imagePath: 'assets/story4.jpg'),
-                  StoryItem(name: 'uwuwu', imagePath: 'assets/story5.jpg'),
-                  StoryItem(name: 'MainJett', imagePath: 'assets/story6.jpg'),
-                ],
+              child: storyList.isEmpty ? Center(child: CircularProgressIndicator(),)
+                  : ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: storyList.length,
+                  itemBuilder: (context, index) {
+                    return StoryItem(
+                      name: storyList[index].user_name ?? '',
+                      imageBase64: storyList[index].user_profile,
+                      story: storyList[index].story,
+                    );
+                  },
+                ),
               ),
-            ),
+              // child: ListView(
+              //   scrollDirection: Axis.horizontal,
+              //   children: [
+              //     StoryItem(name: 'Your Story', imagePath: 'assets/story1.jpg'),
+              //     StoryItem(name: 'pattanap...', imagePath: 'assets/story2.jpg'),
+              //     StoryItem(name: 'bufrghm...', imagePath: 'assets/story3.jpg'),
+              //     StoryItem(name: '13161.jpg', imagePath: 'assets/story4.jpg'),
+              //     StoryItem(name: 'uwuwu', imagePath: 'assets/story5.jpg'),
+              //     StoryItem(name: 'MainJett', imagePath: 'assets/story6.jpg'),
+              //   ],
+              // ),
             Expanded(child: MainContent()),
           ],
         ),
@@ -150,9 +199,10 @@ class MyHomePage extends StatelessWidget with LifecycleListenerEvent {
 
 class StoryItem extends StatefulWidget {
   final String name;
-  final String imagePath;
+  final Uint8List? imageBase64;
+  final bool? story;
 
-  StoryItem({required this.name, required this.imagePath});
+  StoryItem({required this.name, required this.imageBase64, this.story});
 
   @override
   _StoryItemState createState() => _StoryItemState();
@@ -212,6 +262,7 @@ class _StoryItemState extends State<StoryItem> with TickerProviderStateMixin { /
             Stack(
               alignment: Alignment.center,
               children: [
+                if (widget.story != false)
                 SizedBox(
                   width: 80,
                   height: 80,
@@ -227,13 +278,16 @@ class _StoryItemState extends State<StoryItem> with TickerProviderStateMixin { /
                     },
                   ),
                 ),
+                if (widget.story != false)
                 CircleAvatar(
                   radius: 30,
-                  backgroundImage: AssetImage(widget.imagePath),
+                  // backgroundImage: AssetImage(widget.imagePath),
+                  backgroundImage: widget.imageBase64 is Uint8List ? MemoryImage(widget.imageBase64 as Uint8List) : null,
                 ),
               ],
             ),
             SizedBox(height: 3),
+            if (widget.story != false)
             Text(
               widget.name,
               style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
