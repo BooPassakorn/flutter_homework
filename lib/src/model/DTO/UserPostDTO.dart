@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
 class UserPostDTO {
@@ -28,16 +29,20 @@ class UserPostDTO {
   });
 
   factory UserPostDTO.fromJsonToUserPostDTO(Map<String, dynamic> json) => UserPostDTO(
-    post_id: json['post_id'],
-    uuid: json['uuid'],
-    user_id: json['user_id'],
-    user_name: json['user_name'],
-    user_profile: json['user_profile'],
-    user_verified: json['user_verified'],
-    post_created_datetime: json['post_created_datetime'],
-    post_caption: json['post_caption'],
-    post_image: json['post_image'],
-    post_recommend: json['post_recommend'],
-    post_trending: json['post_trending'],
-  );
+        post_id: json['post_id'],
+        uuid: json['uuid'],
+        user_id: json['user_id'],
+        user_name: json['user_name'],
+        user_profile: json['user_profile'] != null
+            ? base64Decode(json['user_profile'])
+            : null,
+        user_verified: json['user_verified'],
+        post_created_datetime: DateTime.parse(json['post_created_datetime']),
+        post_caption: json['post_caption'],
+        post_image: json['post_image'] != null
+            ? base64Decode(json['post_image'])
+            : null,
+        post_recommend: json['post_recommend'],
+        post_trending: json['post_trending'],
+      );
 }

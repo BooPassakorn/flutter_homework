@@ -1,7 +1,11 @@
+import 'dart:convert';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_ui_homework/constant/constant_value.dart';
 import 'package:flutter_ui_homework/core/widget/info_post.dart';
-import 'package:flutter_ui_homework/src/model/data.dart';
-import 'package:flutter_ui_homework/src/model/post_in_main.dart';
+import 'package:flutter_ui_homework/src/model/DTO/UserPostDTO.dart';
+import 'package:http/http.dart' as http;
 
 class MainContent extends StatefulWidget {
   MainContent({Key? key}) : super(key: key);
@@ -18,11 +22,34 @@ class _MainContentState extends State<MainContent> {
   @override
   void initState() {
     super.initState();
+    _fetchAllUserPost();
+
     _scrollController = ScrollController()..addListener(() {
-        setState(() {
-          _showBackToTopButton = _scrollController.offset >= 200;
-        });
+      setState(() {
+        _showBackToTopButton = _scrollController.offset >= 200;
       });
+    });
+  }
+
+  List<UserPostDTO> posts = [];
+
+  Future<void> _fetchAllUserPost() async {
+    try {
+      final url = Uri.parse('$baseURL/api/post/get-all-user-post');
+      http.Response response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        List<dynamic> jsonData = jsonDecode(utf8.decode(response.bodyBytes));
+
+        setState(() {
+          posts = jsonData.map((json) => UserPostDTO.fromJsonToUserPostDTO(json)).toList();
+        });
+      } else {
+        print('Server responded with status: $response');
+      }
+    } catch (e) {
+      print('Error fetching posts: $e');
+    }
   }
 
   @override
@@ -41,13 +68,19 @@ class _MainContentState extends State<MainContent> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: ListView.builder(
+      body: posts.isEmpty ? Center(child: CircularProgressIndicator(),)
+      : ListView.builder(
         controller: _scrollController,
-        itemCount: Appdata.postInMainList.length,
+        itemCount: posts.length,
         itemBuilder: (context, index) {
-          final post = Appdata.postInMainList[index];
-          return PostMain(post: post);
-        },
+          final allUserPost = posts[index];
+          return PostMain(post: allUserPost);
+        }
+        // itemCount: Appdata.postInMainList.length,
+        // itemBuilder: (context, index) {
+        //   final post = Appdata.postInMainList[index];
+        //   return PostMain(post: post);
+        // },
       ),
       floatingActionButton: AnimatedOpacity(
         opacity: _showBackToTopButton ? 1.0 : 0.0, //ค่อยๆแสดง
@@ -84,7 +117,7 @@ class _MainContentState extends State<MainContent> {
 class PostMain extends StatefulWidget {
   const PostMain({Key? key, required this.post}) : super(key: key);
 
-  final PostInMain post;
+  final UserPostDTO post;
 
   @override
   _PostMainState createState() => _PostMainState();
@@ -120,17 +153,17 @@ class _PostMainState extends State<PostMain> with TickerProviderStateMixin {
       padding: EdgeInsets.symmetric(horizontal: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+        children: <Widget>[
           Row(
-            children: [
+            children: <Widget>[
               Stack(
                 alignment: Alignment(1, 1.2),
-                children: [
+                children: <Widget>[
                   CircleAvatar(
-                    backgroundImage: AssetImage(widget.post.imageProfile),
                     radius: 25,
+                    backgroundImage: widget.post.user_profile is Uint8List ? MemoryImage(widget.post.user_profile as Uint8List) : null,
                   ),
-                  if (widget.post.isVerified)
+                  if (widget.post.user_verified != false)
                     Icon(Icons.verified, color: Colors.blue, size: 20),
                 ],
               ),
@@ -139,9 +172,10 @@ class _PostMainState extends State<PostMain> with TickerProviderStateMixin {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
-                    children: [
+                    children: <Widget>[
                       Text(
-                        widget.post.name,
+                        // widget.post.user_name ?? '',
+                        widget.post.user_name as String,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
@@ -149,14 +183,14 @@ class _PostMainState extends State<PostMain> with TickerProviderStateMixin {
                       ),
                       SizedBox(width: 5),
                       Text(
-                        widget.post.nickname,
+                        widget.post.user_id as String,
                         style: TextStyle(fontSize: 16, color: Colors.grey),
                       ),
                     ],
                   ),
                   SizedBox(height: 4),
                   Text(() {
-                    Duration diff = DateTime.now().difference(widget.post.datePostAsDateTime);
+                    Duration diff = DateTime.now().difference(widget.post.post_created_datetime as DateTime);
                     if (diff.inMinutes < 1) {
                       return "Just now";
                     } else if (diff.inMinutes < 60) {
@@ -200,7 +234,7 @@ class _PostMainState extends State<PostMain> with TickerProviderStateMixin {
       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(15),
-        child: Image.asset(widget.post.imagePost),
+        child: widget.post.post_image is Uint8List ? Image.memory(widget.post.post_image as Uint8List) : null
       ),
     );
   }
@@ -248,7 +282,7 @@ class _PostMainState extends State<PostMain> with TickerProviderStateMixin {
   Widget _detailPost() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-      child: _makeColorHashtag(widget.post.detailPost),
+      child: _makeColorHashtag(widget.post.post_caption as String),
       // child: Text(
       //   widget.post.detailPost,
       //   style: TextStyle(fontSize: 15),
