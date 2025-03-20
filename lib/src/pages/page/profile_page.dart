@@ -1,4 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_ui_homework/constant/constant_value.dart';
+import 'package:flutter_ui_homework/src/model/DTO/UserDTO.dart';
+import 'package:flutter_ui_homework/src/model/User.dart';
+import 'package:http/http.dart' as http;
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -152,7 +158,7 @@ class ProfilePage extends StatelessWidget {
               child: TabBarView(
                 children: [
                   const Center(child: Text("")),
-                  AboutSection(),
+                  AboutSection(user: UserDTO(uuid: 'a9636a92-ffbd-11ef-ac51-88a4c2321035'),),
                 ],
               ),
             ),
@@ -183,30 +189,154 @@ class ProfileStat extends StatelessWidget {
   }
 }
 
-class AboutSection extends StatelessWidget {
+class AboutSection extends StatefulWidget {
+  final UserDTO user;
+
+  const AboutSection({Key? key, required this.user}) : super(key: key);
+
+  @override
+  _AboutSectionState createState() => _AboutSectionState();
+}
+
+class _AboutSectionState extends State<AboutSection> {
+  late String selectedGender;
+  // DateTime? selectedDate;
+  UserDTO? user;
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedGender = widget.user.user_gender ?? "not";
+    _fetchUser();
+  }
+
+  Future<void> _fetchUser() async {
+    try {
+      final url = Uri.parse('$baseURL/api/user/all-user/a9636a92-ffbd-11ef-ac51-88a4c2321035');
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        var jsonData = jsonDecode(utf8.decode(response.bodyBytes));
+
+        if (jsonData is List) {
+          setState(() {
+            selectedGender = user?.user_gender ?? "Not";
+            isLoading = false;
+          });
+        }
+      } else {
+        print('Server responded with status: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error fetching user data: $e');
+    }
+  }
+
+  Future<bool> updateGender(String gender) async {
+    final url = Uri.parse('$baseURL/api/user/update-gender');
+    final response = await http.put(
+      url,
+      body: jsonEncode({
+        'uuid': user?.uuid ?? 'a9636a92-ffbd-11ef-ac51-88a4c2321035',
+        'user_gender': gender,
+      }),
+      headers: {'Content-Type': 'application/json'},
+    );
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      print("Failed to update gender. Status code: ${response.statusCode}");
+      return false;
+    }
+  }
+
+  void _updateGender(String gender) async {
+    bool success = await updateGender(gender);
+    if (success) {
+      setState(() {
+        selectedGender = gender;
+      });
+    }
+  }
+
+  void _selectGender() {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          padding: EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                title: Text("Male"),
+                leading: Radio<String>(
+                  value: "male",
+                  groupValue: selectedGender,
+                  onChanged: (value) async {
+                    Navigator.pop(context);
+                    _updateGender(value!);
+                  },
+                ),
+              ),
+              ListTile(
+                title: Text("Female"),
+                leading: Radio<String>(
+                  value: "female",
+                  groupValue: selectedGender,
+                  onChanged: (value) async {
+                    Navigator.pop(context);
+                    _updateGender(value!);
+                  },
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    // if (isLoading) {
+    //   return Center(child: CircularProgressIndicator());
+    // }
     return SingleChildScrollView(
       child: Padding(
         padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("Basic Information", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.grey)),
-            SizedBox(height: 10),
-            _infoTile(Icons.person, "Gender", "Male"),
-            Divider(thickness: 0.7,),
-            _infoTile(Icons.calendar_today, "Birth Of Date", "10 November 2024"),
-            Divider(thickness: 0.7,),
-            _infoTile(Icons.message, "Languages", "Thai, English"),
-            Divider(thickness: 0.7,),
-          ],
+        child: Container(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("Basic Information", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.grey)),
+              SizedBox(height: 10),
+
+              _infoTile(Icons.person, "Gender", selectedGender, IconButton(
+                onPressed: () {
+                  _selectGender();
+                },
+                icon: Icon(Icons.edit_outlined, color: Colors.grey[300], size: 27),
+              )),
+              Divider(thickness: 0.7),
+
+              _infoTile(Icons.message, "Birth Of Date", "01 MAY 2003", IconButton(onPressed: (){
+                }, icon: Icon(Icons.edit_outlined, color: Colors.grey[300], size: 27,))),
+              Divider(thickness: 0.7,),
+
+              _infoTile(Icons.message, "Languages", "Thai, English", IconButton(onPressed: (){
+                }, icon: Icon(Icons.edit_outlined, color: Colors.grey[300], size: 27,))),
+              Divider(thickness: 0.7,),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _infoTile(IconData icon, String title, String subtitle) {
+  Widget _infoTile(IconData icon, String title, String subtitle, IconButton icons) {
     return ListTile(
       leading: CircleAvatar(
         radius: 30,
@@ -215,7 +345,42 @@ class AboutSection extends StatelessWidget {
       ),
       title: Text(title, style: TextStyle(fontSize: 15, fontWeight:FontWeight.w400, color: Colors.grey),),
       subtitle: Text(subtitle, style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),),
-      trailing: Icon(Icons.edit_outlined, color: Colors.grey[300], size: 27,),
+      trailing: icons,
     );
   }
 }
+
+  // void _selectDate() async {
+  //   DateTime? pickedDate = await showDatePicker(
+  //     context: context,
+  //     initialDate: selectedDate ?? DateTime.now(),
+  //     firstDate: DateTime(1900),
+  //     lastDate: DateTime.now(),
+  //   );
+  //
+  //   if (pickedDate != null) {
+  //     await _updateDOB(pickedDate);
+  //   }
+  // }
+  //
+  // Future<void> _updateDOB(DateTime date) async {
+  //   try {
+  //     String formattedDate = "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
+  //     await user?.updateDOB(formattedDate);
+  //     setState(() {
+  //       user?.user_date_of_birth = date;
+  //     });
+  //   } catch (e) {
+  //     print("Error updating date of birth: $e");
+  //   }
+  // }
+  //
+  // String _getMonthName(int month) {
+  //   List<String> months = [
+  //     "January", "February", "March", "April", "May", "June",
+  //     "July", "August", "September", "October", "November", "December"
+  //   ];
+  //   return months[month - 1];
+  // }
+
+
