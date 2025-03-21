@@ -5,7 +5,7 @@ import 'package:flutter_ui_homework/constant/constant_value.dart';
 import 'package:http/http.dart' as http;
 
 class UserDTO {
-  String uuid = 'a9636a92-ffbd-11ef-ac51-88a4c2321035';
+  final String uuid;
   String? user_id;
   String? user_name;
   Uint8List? user_profile;
@@ -42,7 +42,7 @@ class UserDTO {
         : null,
     user_verified: json['user_verified'],
     user_introduce: json['user_introduce'],
-    user_gender: json['user_gender'],
+    user_gender: json['updatedGender']['gender'],
     user_date_of_birth: DateTime.parse(json['user_date_of_birth']),
     followers: json['followers'],
     following: json['following'],
@@ -65,50 +65,4 @@ class UserDTO {
     }
   }
 }
-
-  // static Future<UserDTO> fetchUser() async {
-  //   final response = await http.get(
-  //     Uri.parse('$baseURL/api/user/all-user/$uuid'),
-  //     headers: {'Content-Type': 'application/json'},
-  //   );
-  //
-  //   if (response.statusCode == 200) {
-  //     final userData = jsonDecode(response.body) as Map<String, dynamic>;
-  //     return UserDTO.fromJsonToUserDTO(userData);
-  //   } else {
-  //     throw Exception('Failed to load user data');
-  //   }
-  // }
-
-  // static Future<UserDTO> fetchUser() async {
-  //   final response = await http.get(
-  //     Uri.parse('$baseURL/api/user/all-user/$uuid'),
-  //     headers: {'Content-Type': 'application/json'},
-  //   );
-  //
-  //   if (response.statusCode == 200) {
-  //     final userData = jsonDecode(response.body) as Map<String, dynamic>;
-  //     return UserDTO.fromJsonToUserDTO(userData);
-  //   } else {
-  //     throw Exception('Failed to load user data');
-  //   }
-  // }
-
-  // static Future<UserDTO> _fetchAllStoryUser() async {
-  //   try {
-  //     final url = Uri.parse('$baseURL/api/user/all-user/$uuid');
-  //     http.Response response = await http.get(url);
-  //
-  //     if (response.statusCode == 200) {
-  //       List<dynamic> jsonData = jsonDecode(utf8.decode(response.bodyBytes));
-  //
-  //       final userData = jsonDecode(response.body) as Map<String, dynamic>;
-  //       return UserDTO.fromJsonToUserDTO(userData);
-  //     } else {
-  //       print('Server responded with status: ${response.statusCode}');
-  //     }
-  //   } catch (e) {
-  //     print('Error fetching posts: $e');
-  //   }
-  // }
 

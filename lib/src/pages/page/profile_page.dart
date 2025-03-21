@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_ui_homework/constant/constant_value.dart';
 import 'package:flutter_ui_homework/src/model/DTO/UserDTO.dart';
@@ -38,7 +37,11 @@ class ProfilePage extends StatelessWidget {
                       color: Colors.black12,
                     ),
                     child: Center(
-                      child: Icon(Icons.dehaze, size: 15, color: Colors.white70),
+                      child: Icon(
+                        Icons.dehaze,
+                        size: 15,
+                        color: Colors.white70,
+                      ),
                     ),
                   ),
                 ),
@@ -68,15 +71,11 @@ class ProfilePage extends StatelessWidget {
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(width: 5),
-                Text(
-                  "@violadwip",
-                  style: TextStyle(color: Colors.grey),
-                ),
+                Text("@violadwip", style: TextStyle(color: Colors.grey)),
                 SizedBox(width: 5),
                 Icon(Icons.verified, color: Colors.blue, size: 18),
               ],
             ),
-
             SizedBox(height: 10),
             Text(
               "Hello My name is Hello world nice to meet you",
@@ -96,9 +95,12 @@ class ProfilePage extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    minimumSize: Size(150, 55)
+                    minimumSize: Size(150, 55),
                   ),
-                  child: Text("Edit Profile",style: TextStyle(color: Color(0xff07699d), fontSize: 17),),
+                  child: Text(
+                    "Edit Profile",
+                    style: TextStyle(color: Color(0xff07699d), fontSize: 17),
+                  ),
                 ),
                 SizedBox(width: 10),
                 ElevatedButton(
@@ -109,9 +111,9 @@ class ProfilePage extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    minimumSize: Size(20, 55)
+                    minimumSize: Size(20, 55),
                   ),
-                  child: Icon(Icons.share, color: Colors.white, size: 17,),
+                  child: Icon(Icons.share, color: Colors.white, size: 17),
                 ),
               ],
             ),
@@ -129,16 +131,16 @@ class ProfilePage extends StatelessWidget {
             TabBar(
               labelColor: Colors.blue,
               unselectedLabelColor: Colors.grey,
-              indicatorColor: Colors.blue, //สีแถบด้านล่าง
-              indicatorSize: TabBarIndicatorSize.tab, //ขนาดเส้นแถบด้านล่าง
+              indicatorColor: Colors.blue,
+              indicatorSize: TabBarIndicatorSize.tab,
               tabs: [
                 Tab(
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.grid_view, size: 25,),
-                      SizedBox(width: 10,),
-                      Text("Post", style: TextStyle(fontSize: 22),),
+                      Icon(Icons.grid_view, size: 25),
+                      SizedBox(width: 10),
+                      Text("Post", style: TextStyle(fontSize: 22)),
                     ],
                   ),
                 ),
@@ -146,9 +148,9 @@ class ProfilePage extends StatelessWidget {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.account_box_outlined, size: 25,),
-                      SizedBox(width: 10 ,),
-                      Text("About", style: TextStyle(fontSize: 22),),
+                      Icon(Icons.account_box_outlined, size: 25),
+                      SizedBox(width: 10),
+                      Text("About", style: TextStyle(fontSize: 22)),
                     ],
                   ),
                 ),
@@ -158,7 +160,9 @@ class ProfilePage extends StatelessWidget {
               child: TabBarView(
                 children: [
                   const Center(child: Text("")),
-                  AboutSection(user: UserDTO(uuid: 'a9636a92-ffbd-11ef-ac51-88a4c2321035'),),
+                  AboutSection(
+                    user: UserDTO(uuid: 'a9636a92-ffbd-11ef-ac51-88a4c2321035'),
+                  ),
                 ],
               ),
             ),
@@ -199,37 +203,54 @@ class AboutSection extends StatefulWidget {
 }
 
 class _AboutSectionState extends State<AboutSection> {
-  late String selectedGender;
-  // DateTime? selectedDate;
+  late Future<UserDTO> futureUser;
+  late String selectedGender ;
   UserDTO? user;
   bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    selectedGender = widget.user.user_gender ?? "not";
     _fetchUser();
+    selectedGender = widget.user.user_gender ?? "not";
   }
 
   Future<void> _fetchUser() async {
+    setState(() {
+      isLoading = true; // เริ่มโหลด
+    });
+
     try {
-      final url = Uri.parse('$baseURL/api/user/all-user/a9636a92-ffbd-11ef-ac51-88a4c2321035');
+      final url = Uri.parse(
+        '$baseURL/api/user/all-user/a9636a92-ffbd-11ef-ac51-88a4c2321035',
+      );
       final response = await http.get(url);
 
       if (response.statusCode == 200) {
         var jsonData = jsonDecode(utf8.decode(response.bodyBytes));
-
-        if (jsonData is List) {
+        if (jsonData != null &&
+            jsonData is Map &&
+            jsonData.containsKey('updatedGender')) {
           setState(() {
-            selectedGender = user?.user_gender ?? "Not";
-            isLoading = false;
+            user = UserDTO(
+              uuid: jsonData['uuid'],
+              user_gender: jsonData['updatedGender']['gender'],
+            );
+            selectedGender = user!.user_gender ?? "Not";
+            isLoading = false; // โหลดเสร็จ
           });
         }
       } else {
-        print('Server responded with status: ${response.statusCode}');
+        print('Error: Server responded with status code ${response.statusCode}');
+        setState(() {
+          isLoading = false;
+        });
       }
     } catch (e) {
       print('Error fetching user data: $e');
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
@@ -245,11 +266,17 @@ class _AboutSectionState extends State<AboutSection> {
     );
 
     if (response.statusCode == 200) {
-      return true;
+      var jsonResponse = jsonDecode(response.body);
+      if (jsonResponse != null && jsonResponse.containsKey('updatedGender')) {
+        setState(() {
+          user?.user_gender = jsonResponse['updatedGender']['gender'];
+        });
+        return true;
+      }
     } else {
       print("Failed to update gender. Status code: ${response.statusCode}");
-      return false;
     }
+    return false;
   }
 
   void _updateGender(String gender) async {
@@ -258,6 +285,8 @@ class _AboutSectionState extends State<AboutSection> {
       setState(() {
         selectedGender = gender;
       });
+
+      _fetchUser();
     }
   }
 
@@ -301,9 +330,6 @@ class _AboutSectionState extends State<AboutSection> {
 
   @override
   Widget build(BuildContext context) {
-    // if (isLoading) {
-    //   return Center(child: CircularProgressIndicator());
-    // }
     return SingleChildScrollView(
       child: Padding(
         padding: EdgeInsets.all(16.0),
@@ -311,24 +337,46 @@ class _AboutSectionState extends State<AboutSection> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("Basic Information", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.grey)),
+              Text("Basic Information",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.grey),
+              ),
               SizedBox(height: 10),
 
-              _infoTile(Icons.person, "Gender", selectedGender, IconButton(
-                onPressed: () {
-                  _selectGender();
-                },
-                icon: Icon(Icons.edit_outlined, color: Colors.grey[300], size: 27),
-              )),
+              _infoTile(Icons.person, "Gender", selectedGender,
+                IconButton(
+                  onPressed: () => _selectGender(),
+                  icon: Icon(Icons.edit_outlined, color: Colors.grey[300], size: 27),
+                ),
+              ),
               Divider(thickness: 0.7),
-
-              _infoTile(Icons.message, "Birth Of Date", "01 MAY 2003", IconButton(onPressed: (){
-                }, icon: Icon(Icons.edit_outlined, color: Colors.grey[300], size: 27,))),
-              Divider(thickness: 0.7,),
-
-              _infoTile(Icons.message, "Languages", "Thai, English", IconButton(onPressed: (){
-                }, icon: Icon(Icons.edit_outlined, color: Colors.grey[300], size: 27,))),
-              Divider(thickness: 0.7,),
+              _infoTile(
+                Icons.message,
+                "Birth Of Date",
+                "01 MAY 2003",
+                IconButton(
+                  onPressed: () {},
+                  icon: Icon(
+                    Icons.edit_outlined,
+                    color: Colors.grey[300],
+                    size: 27,
+                  ),
+                ),
+              ),
+              Divider(thickness: 0.7),
+              _infoTile(
+                Icons.message,
+                "Languages",
+                "Thai, English",
+                IconButton(
+                  onPressed: () {},
+                  icon: Icon(
+                    Icons.edit_outlined,
+                    color: Colors.grey[300],
+                    size: 27,
+                  ),
+                ),
+              ),
+              Divider(thickness: 0.7),
             ],
           ),
         ),
@@ -336,51 +384,31 @@ class _AboutSectionState extends State<AboutSection> {
     );
   }
 
-  Widget _infoTile(IconData icon, String title, String subtitle, IconButton icons) {
+  Widget _infoTile(
+      IconData icon,
+      String title,
+      String subtitle,
+      IconButton icons,
+      ) {
     return ListTile(
       leading: CircleAvatar(
         radius: 30,
         backgroundColor: Colors.blue.shade50,
-        child: Icon(icon, color: Color(0xff07699d), size: 30,),
+        child: Icon(icon, color: Color(0xff07699d), size: 30),
       ),
-      title: Text(title, style: TextStyle(fontSize: 15, fontWeight:FontWeight.w400, color: Colors.grey),),
-      subtitle: Text(subtitle, style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),),
+      title: Text(
+        title,
+        style: TextStyle(
+          fontSize: 15,
+          fontWeight: FontWeight.w400,
+          color: Colors.grey,
+        ),
+      ),
+      subtitle: Text(
+        subtitle,
+        style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+      ),
       trailing: icons,
     );
   }
 }
-
-  // void _selectDate() async {
-  //   DateTime? pickedDate = await showDatePicker(
-  //     context: context,
-  //     initialDate: selectedDate ?? DateTime.now(),
-  //     firstDate: DateTime(1900),
-  //     lastDate: DateTime.now(),
-  //   );
-  //
-  //   if (pickedDate != null) {
-  //     await _updateDOB(pickedDate);
-  //   }
-  // }
-  //
-  // Future<void> _updateDOB(DateTime date) async {
-  //   try {
-  //     String formattedDate = "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
-  //     await user?.updateDOB(formattedDate);
-  //     setState(() {
-  //       user?.user_date_of_birth = date;
-  //     });
-  //   } catch (e) {
-  //     print("Error updating date of birth: $e");
-  //   }
-  // }
-  //
-  // String _getMonthName(int month) {
-  //   List<String> months = [
-  //     "January", "February", "March", "April", "May", "June",
-  //     "July", "August", "September", "October", "November", "December"
-  //   ];
-  //   return months[month - 1];
-  // }
-
-
