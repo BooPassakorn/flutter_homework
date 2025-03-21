@@ -212,12 +212,12 @@ class _AboutSectionState extends State<AboutSection> {
   void initState() {
     super.initState();
     _fetchUser();
-    selectedGender = widget.user.user_gender ?? "not";
+    selectedGender = "Loading...";
   }
 
   Future<void> _fetchUser() async {
     setState(() {
-      isLoading = true; // เริ่มโหลด
+      isLoading = true;
     });
 
     try {
@@ -228,16 +228,17 @@ class _AboutSectionState extends State<AboutSection> {
 
       if (response.statusCode == 200) {
         var jsonData = jsonDecode(utf8.decode(response.bodyBytes));
-        if (jsonData != null &&
-            jsonData is Map &&
-            jsonData.containsKey('updatedGender')) {
+
+        if (jsonData != null && jsonData is Map && jsonData.containsKey('users')) {
+          var userData = jsonData['users'][0];
+
           setState(() {
             user = UserDTO(
-              uuid: jsonData['uuid'],
-              user_gender: jsonData['updatedGender']['gender'],
+              uuid: userData['uuid'],
+              user_gender: userData['user_gender'],
             );
-            selectedGender = user!.user_gender ?? "Not";
-            isLoading = false; // โหลดเสร็จ
+            selectedGender = user?.user_gender ?? "Not";
+            isLoading = false;
           });
         }
       } else {
@@ -282,11 +283,7 @@ class _AboutSectionState extends State<AboutSection> {
   void _updateGender(String gender) async {
     bool success = await updateGender(gender);
     if (success) {
-      setState(() {
-        selectedGender = gender;
-      });
-
-      _fetchUser();
+      await _fetchUser();
     }
   }
 
