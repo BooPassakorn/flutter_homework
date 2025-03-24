@@ -221,9 +221,7 @@ class _AboutSectionState extends State<AboutSection> {
     });
 
     try {
-      final url = Uri.parse(
-        '$baseURL/api/user/all-user/a9636a92-ffbd-11ef-ac51-88a4c2321035',
-      );
+      final url = Uri.parse('$baseURL/api/user/all-user/a9636a92-ffbd-11ef-ac51-88a4c2321035',);
       final response = await http.get(url);
 
       if (response.statusCode == 200) {

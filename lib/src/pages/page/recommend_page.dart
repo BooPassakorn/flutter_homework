@@ -1,21 +1,66 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_ui_homework/core/widget/info_post.dart';
-import 'package:flutter_ui_homework/src/model/data.dart';
-import 'package:flutter_ui_homework/src/model/post_in_main.dart';
+import 'dart:convert';
+import 'dart:typed_data';
 
-class RecommandPage extends StatelessWidget {
+import 'package:flutter/material.dart';
+import 'package:flutter_ui_homework/constant/constant_value.dart';
+import 'package:flutter_ui_homework/core/widget/info_post.dart';
+import 'package:flutter_ui_homework/src/model/DTO/UserPostDTO.dart' show UserPostDTO;
+import 'package:http/http.dart' as http;
+
+class RecommandPage extends StatefulWidget {
   const RecommandPage({super.key});
+
+  @override
+  _RecommandPageState createState() => _RecommandPageState();
+}
+
+class _RecommandPageState extends State<RecommandPage> {
+  List<UserPostDTO> posts = [];
+  String searchQuery = "";
+  bool isFirstRecommend = true;
+  bool isFirstTrending = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchAllUserPost();
+  }
+
+  Future<void> _fetchAllUserPost() async {
+    try {
+      final url = Uri.parse('$baseURL/api/post/get-all-user-post');
+      http.Response response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        List<dynamic> jsonData = jsonDecode(utf8.decode(response.bodyBytes));
+
+        setState(() {
+          posts = jsonData.map((json) => UserPostDTO.fromJsonToUserPostDTO(json)).toList();
+        });
+      } else {
+        print('Server responded with status: $response');
+      }
+    } catch (e) {
+      print('Error fetching posts: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
 
-    final allPosts = Appdata.postInMainList; //ดึงข้อมูลทั้งหมด
-    final recommendPosts = allPosts.where((post) => post.isRecommand).toList();
-    final normalPosts = allPosts.where((post) => !post.isRecommand).toList();
-    final mergePosts = [...recommendPosts, ...normalPosts]; //spread operator เอา normalPosts ต่อ recommandPosts
+    final filteredPosts = posts.where((post) {
+      return post.post_caption != null &&
+          post.post_caption!.toLowerCase().contains(searchQuery.toLowerCase());
+    }).toList();
 
-    final firstRecommendIndex = recommendPosts.isNotEmpty ? mergePosts.indexOf(recommendPosts.first) : -1; //-1 ถ้าไม่มีข้อมูล -1 เพราะไม่มีข้อมูลใน list แน่ๆ
+    final recommendPosts = filteredPosts.where((post) => post.post_recommend ?? false).toList();
+    final normalPosts = filteredPosts.where((post) => post.post_trending ?? false).toList();
+
+    final mergePosts = [...recommendPosts, ...normalPosts];
+
+    final firstRecommendIndex = recommendPosts.isNotEmpty ? mergePosts.indexOf(recommendPosts.first) : -1;
     final firstNormalIndex = normalPosts.isNotEmpty ? mergePosts.indexOf(normalPosts.first) : -1;
+
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -42,17 +87,24 @@ class RecommandPage extends StatelessWidget {
                 borderSide: BorderSide(color: Colors.black),
               ),
             ),
+            onChanged: (value) {
+              setState(() {
+                searchQuery = value;
+              });
+            },
           ),
         ),
       ),
-      body: ListView.builder(
+      body: posts.isEmpty
+          ? Center(child: CircularProgressIndicator())
+          : ListView.builder(
         itemCount: mergePosts.length,
         itemBuilder: (context, index) {
           final post = mergePosts[index];
-          if (post.isRecommand) {
-            return PostRecommand(post: post, isFirst: index == firstRecommendIndex); //ถ้า index ตัวแรก ตรงกับ firstRecommendIndex isFirst จะมีค่าเป็น True ถ้าไม่ใช่ตัวแรกจะให้เป็น false
+          if (post.post_recommend ?? false) {
+            return PostRecommand(post: post, isFirst: isFirstRecommend && index == firstRecommendIndex);
           } else {
-            return PostNormal(post: post, isFirst: index == firstNormalIndex);
+            return PostNormal(post: post, isFirst: isFirstTrending && index == firstNormalIndex);
           }
         },
       ),
@@ -60,10 +112,11 @@ class RecommandPage extends StatelessWidget {
   }
 }
 
+
 class PostRecommand extends StatefulWidget {
   const PostRecommand({super.key, required this.post,required this.isFirst});
 
-  final PostInMain post;
+  final UserPostDTO post;
   final bool isFirst;
 
   @override
@@ -72,6 +125,7 @@ class PostRecommand extends StatefulWidget {
 
 class _PostRecommandState extends State<PostRecommand>
     with TickerProviderStateMixin {
+
   bool isLiked = false;
   bool isBookmark = false;
 
@@ -152,11 +206,11 @@ class _PostRecommandState extends State<PostRecommand>
             alignment: Alignment(1, 1.2),
             children: [
               CircleAvatar(
-                backgroundImage: AssetImage(widget.post.imageProfile),
                 radius: 25,
+                backgroundImage: widget.post.user_profile is Uint8List ? MemoryImage(widget.post.user_profile as Uint8List) : null,
               ),
-              if (widget.post.isVerified)
-                const Icon(Icons.verified, color: Colors.blue, size: 18),
+              if (widget.post.user_verified != false)
+                Icon(Icons.verified, color: Colors.blue, size: 20),
             ],
           ),
           const SizedBox(width: 12),
@@ -166,7 +220,7 @@ class _PostRecommandState extends State<PostRecommand>
               Row(
                 children: [
                   Text(
-                    widget.post.name,
+                    widget.post.user_name as String,
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
@@ -174,15 +228,13 @@ class _PostRecommandState extends State<PostRecommand>
                   ),
                   const SizedBox(width: 5),
                   Text(
-                    widget.post.nickname,
+                    widget.post.user_id as String,
                     style: const TextStyle(fontSize: 14, color: Colors.grey),
                   ),
                 ],
               ),
               Text(() {
-                Duration diff = DateTime.now().difference(
-                  widget.post.datePostAsDateTime,
-                );
+                Duration diff = DateTime.now().difference(widget.post.post_created_datetime as DateTime);
                 if (diff.inMinutes < 1) {
                   return "Just now";
                 } else if (diff.inMinutes < 60) {
@@ -211,10 +263,10 @@ class _PostRecommandState extends State<PostRecommand>
       isScrollControlled: true, //ทำให้เต็มจอ
       builder:
           (ctx) => DraggableScrollableSheet(
-            expand: false, //ไม่ใส่ false จะเต็มจอ
-            initialChildSize: 0.67,
-            builder: (_, controller) => InfoPost(scrollController: controller),
-          ),
+        expand: false, //ไม่ใส่ false จะเต็มจอ
+        initialChildSize: 0.67,
+        builder: (_, controller) => InfoPost(scrollController: controller),
+      ),
     );
   }
 
@@ -222,8 +274,8 @@ class _PostRecommandState extends State<PostRecommand>
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(15),
-        child: Image.asset(widget.post.imagePost),
+          borderRadius: BorderRadius.circular(15),
+          child: widget.post.post_image is Uint8List ? Image.memory(widget.post.post_image as Uint8List) : null
       ),
     );
   }
@@ -238,7 +290,7 @@ class _PostRecommandState extends State<PostRecommand>
     ); //allMatches(text) ค้นหาทุกคำที่ตรงกับ RegExp ที่อยู่ใน text คืนค่ามาเป็น Iterable ที่จะเก็บข้อมูลเกี่ยวกับการจับคู่แต่ละคำ
 
     int lastIndex =
-        0; //ไว้เก็บตำแหน่งสุดท้ายข้อความที่่ถูกตรวจแล้ว เอาไปใช้เพื่อตัดข้อความที่ไม่มี # ออก
+    0; //ไว้เก็บตำแหน่งสุดท้ายข้อความที่่ถูกตรวจแล้ว เอาไปใช้เพื่อตัดข้อความที่ไม่มี # ออก
     for (RegExpMatch match in matches) {
       if (match.start > lastIndex) {
         //match.start ตำแหน่งเริ่มต้นของ # ใน text || lastIndex ตำแหน่งข้อความก่อนหน้า ถ้ามีข้อความอยู่ก่อนหน้า # จะถูกนำมาใส่ spans และสีจะไม่เปลี่ยน
@@ -271,7 +323,7 @@ class _PostRecommandState extends State<PostRecommand>
   Widget _detailPost() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-      child: _makeColorHashtag(widget.post.detailPost),
+      child: _makeColorHashtag(widget.post.post_caption as String),
       // child: Text(
       //   widget.post.detailPost,
       //   style: TextStyle(fontSize: 15),
@@ -290,7 +342,7 @@ class _PostRecommandState extends State<PostRecommand>
             isLiked ? Icons.favorite : Icons.favorite_outline,
             isLiked ? Colors.red : Colors.grey,
             "$favoriteCount",
-            () {
+                () {
               setState(() {
                 isLiked = !isLiked;
                 favoriteCount += isLiked ? 1 : -1;
@@ -301,7 +353,7 @@ class _PostRecommandState extends State<PostRecommand>
             isBookmark ? Icons.bookmark : Icons.bookmark_border,
             isBookmark ? Color(0xff07699d) : Colors.grey,
             "$bookmarkCount",
-            () {
+                () {
               setState(() {
                 isBookmark = !isBookmark;
                 bookmarkCount += isBookmark ? 1 : -1;
@@ -315,11 +367,11 @@ class _PostRecommandState extends State<PostRecommand>
   }
 
   Widget _iconButton(
-    IconData icon,
-    Color color,
-    String text,
-    VoidCallback onPressed,
-  ) {
+      IconData icon,
+      Color color,
+      String text,
+      VoidCallback onPressed,
+      ) {
     return Row(
       children: [
         IconButton(onPressed: onPressed, icon: Icon(icon, color: color)),
@@ -381,7 +433,7 @@ class PostNormal extends StatefulWidget {
 
   const PostNormal({super.key, required this.post, required this.isFirst});
 
-  final PostInMain post;
+  final UserPostDTO post;
   final bool isFirst;
 
   @override
@@ -445,10 +497,10 @@ class _PostNormalState extends State<PostNormal> {
                 alignment: Alignment(1, 1.2),
                 children: [
                   CircleAvatar(
-                    backgroundImage: AssetImage(widget.post.imageProfile),
                     radius: 25,
+                    backgroundImage: widget.post.user_profile is Uint8List ? MemoryImage(widget.post.user_profile as Uint8List) : null,
                   ),
-                  if (widget.post.isVerified)
+                  if (widget.post.user_verified != false)
                     Icon(Icons.verified, color: Colors.blue, size: 20),
                 ],
               ),
@@ -459,7 +511,7 @@ class _PostNormalState extends State<PostNormal> {
                   Row(
                     children: [
                       Text(
-                        widget.post.name,
+                        widget.post.user_name as String,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
@@ -467,14 +519,14 @@ class _PostNormalState extends State<PostNormal> {
                       ),
                       SizedBox(width: 5),
                       Text(
-                        widget.post.nickname,
+                        widget.post.user_id as String,
                         style: TextStyle(fontSize: 16, color: Colors.grey),
                       ),
                     ],
                   ),
                   SizedBox(height: 4),
                   Text(() {
-                    Duration diff = DateTime.now().difference(widget.post.datePostAsDateTime);
+                    Duration diff = DateTime.now().difference(widget.post.post_created_datetime as DateTime);
                     if (diff.inMinutes < 1) {
                       return "Just now";
                     } else if (diff.inMinutes < 60) {
@@ -517,8 +569,8 @@ class _PostNormalState extends State<PostNormal> {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(15),
-        child: Image.asset(widget.post.imagePost),
+          borderRadius: BorderRadius.circular(15),
+          child: widget.post.post_image is Uint8List ? Image.memory(widget.post.post_image as Uint8List) : null
       ),
     );
   }
@@ -566,7 +618,7 @@ class _PostNormalState extends State<PostNormal> {
   Widget _detailPost() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-      child: _makeColorHashtag(widget.post.detailPost),
+      child: _makeColorHashtag(widget.post.post_caption as String),
       // child: Text(
       //   widget.post.detailPost,
       //   style: TextStyle(fontSize: 15),
