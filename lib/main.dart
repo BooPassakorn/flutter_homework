@@ -30,7 +30,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      title: 'Flutter Demo',
       getPages: Routes.getPageRoute(),
       initialRoute: Routes.rootPage,
     );
@@ -150,7 +149,7 @@ class _MyHomePageState extends State<MyHomePage> with LifecycleListenerEvent {
                       '61',
                       style: TextStyle(
                           color: Colors.white,
-                          fontSize: 9,
+                          fontSize: 10,
                           fontWeight: FontWeight.bold),
                     ),
                   ),
@@ -256,7 +255,7 @@ class _StoryItemState extends State<StoryItem> with TickerProviderStateMixin { /
     return GestureDetector(
       onTap: _playAnimation, //เรียกใช้ฟังก์ชันเล่นอนิเมชัน
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 6.5),
+        padding: const EdgeInsets.symmetric(horizontal: 1.5),
         child: Column(
           children: [
             Stack(
@@ -286,7 +285,7 @@ class _StoryItemState extends State<StoryItem> with TickerProviderStateMixin { /
                 ),
               ],
             ),
-            SizedBox(height: 3),
+            SizedBox(height: 2),
             if (widget.story != false)
             Text(
               widget.name,

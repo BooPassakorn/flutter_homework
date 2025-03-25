@@ -73,7 +73,7 @@ class NavigationBarPage extends StatelessWidget {
             if (index == 3)
               Positioned(
                 top: -4,
-                right: 16,
+                right: 14,
                 child: Container(
                   padding: EdgeInsets.all(4),
                   decoration: BoxDecoration(
@@ -84,7 +84,7 @@ class NavigationBarPage extends StatelessWidget {
                     "4",
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 10,
+                      fontSize: 12,
                       fontWeight: FontWeight.bold,
                     ),
                     // textAlign: TextAlign.center,
