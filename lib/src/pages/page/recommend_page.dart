@@ -49,8 +49,7 @@ class _RecommandPageState extends State<RecommandPage> {
   Widget build(BuildContext context) {
 
     final filteredPosts = posts.where((post) {
-      return post.post_caption != null &&
-          post.post_caption!.toLowerCase().contains(searchQuery.toLowerCase());
+      return post.post_caption != null && post.post_caption!.toLowerCase().contains(searchQuery.toLowerCase());
     }).toList();
 
     final recommendPosts = filteredPosts.where((post) => post.post_recommend ?? false).toList();
@@ -675,5 +674,3 @@ class _PostNormalState extends State<PostNormal> {
     );
   }
 }
-
-
