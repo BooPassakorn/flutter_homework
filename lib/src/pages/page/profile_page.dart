@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_ui_homework/constant/constant_value.dart';
+import 'package:flutter_ui_homework/src/model/DTO/UpdateLanguageRequestDTO.dart' show UpdateLanguageRequestDTO;
 import 'package:flutter_ui_homework/src/model/DTO/UserDTO.dart';
-import 'package:flutter_ui_homework/src/model/User.dart';
 import 'package:http/http.dart' as http;
 
 class ProfilePage extends StatelessWidget {
@@ -203,8 +203,15 @@ class AboutSection extends StatefulWidget {
 }
 
 class _AboutSectionState extends State<AboutSection> {
+  late Future<UpdateLanguageRequestDTO> futureUpdateLangugae;
   late Future<UserDTO> futureUser;
   late String selectedGender ;
+
+  bool isThaiSelected = false;
+  bool isEnglishSelected = false;
+  bool isChineseSelected = false;
+  Set<String> selectedLanguages = {};
+
   UserDTO? user;
   bool isLoading = true;
 
@@ -323,6 +330,73 @@ class _AboutSectionState extends State<AboutSection> {
     );
   }
 
+  void _selectedLanguage() {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            return Container(
+              padding: EdgeInsets.all(16),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CheckboxListTile(
+                    value: selectedLanguages.contains('Thai'),
+                    title: Text('Thai'),
+                    onChanged: (bool? value) {
+                      setModalState(() {
+                        if (value == true) {
+                          selectedLanguages.add('Thai');
+                        } else {
+                          selectedLanguages.remove('Thai');
+                        }
+                      });
+                      setState(() {}); //
+                    },
+                  ),
+                  CheckboxListTile(
+                    value: selectedLanguages.contains('English'),
+                    title: Text('English'),
+                    onChanged: (bool? value) {
+                      setModalState(() {
+                        if (value == true) {
+                          selectedLanguages.add('English');
+                        } else {
+                          selectedLanguages.remove('English');
+                        }
+                      });
+                      setState(() {});
+                    },
+                  ),
+                  CheckboxListTile(
+                    value: selectedLanguages.contains('Chinese'),
+                    title: Text('Chinese'),
+                    onChanged: (bool? value) {
+                      setModalState(() {
+                        if (value == true) {
+                          selectedLanguages.add('Chinese');
+                        } else {
+                          selectedLanguages.remove('Chinese');
+                        }
+                      });
+                      setState(() {});
+                    },
+                  ),
+                  SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: Text('Confirm'),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -363,7 +437,7 @@ class _AboutSectionState extends State<AboutSection> {
                 "Languages",
                 "Thai, English",
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () => _selectedLanguage(),
                   icon: Icon(
                     Icons.edit_outlined,
                     color: Colors.grey[300],
