@@ -419,7 +419,7 @@ class _AboutSectionState extends State<AboutSection> {
               ),
               Divider(thickness: 0.7),
               _infoTile(
-                Icons.message,
+                Icons.cake,
                 "Birth Of Date",
                 "01 MAY 2003",
                 IconButton(
